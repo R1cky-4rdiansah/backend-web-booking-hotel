@@ -25,6 +25,12 @@
 
     <!-- Custom styles for this template-->
     <link href="/sb-admin2/css/sb-admin-2.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this page -->
+    <link
+      href="/sb-admin2/vendor/datatables/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+    />
   </head>
 
   <body id="page-top">
@@ -99,5 +105,24 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/sb-admin2/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="/sb-admin2/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/sb-admin2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/sb-admin2/js/demo/datatables-demo.js"></script>
+
+    <script>
+      var sidebarButton = $("a.nav-link");
+
+      for (let index = 0; index < sidebarButton.length; index++) {
+        if (
+          sidebarButton[index].getAttribute("href") == window.location.pathname
+        ) {
+          sidebarButton[index].parentElement.classList.add("active");
+        }
+      }
+    </script>
   </body>
 </html>

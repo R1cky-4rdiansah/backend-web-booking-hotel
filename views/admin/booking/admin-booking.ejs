@@ -1,0 +1,10 @@
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Dashboard')
+%> <% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
+partial('../../parts/navbar')) %>
+
+<div class="container-fluid">
+  <h1 class="h3 mb-4 text-gray-800">Menu Booking</h1>
+  <%- partial('table-booking') %>
+</div>
+
+<% block('footer', partial('../../parts/footer')) %>

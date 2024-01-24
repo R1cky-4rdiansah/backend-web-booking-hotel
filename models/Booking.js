@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     required: [true, "Eits, isi dulu tanggal mulainya"],
   },
-  price: {
+  bookingEndDate: {
     type: String,
     required: [true, "Eits, isi dulu tanggal selesainya"],
   },
