@@ -1,5 +1,5 @@
-const { ObjectId } = mongoose.Schema;
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const bookingSchema = new mongoose.Schema({
   bookingStartDate: {
@@ -7,7 +7,7 @@ const bookingSchema = new mongoose.Schema({
     required: [true, "Eits, isi dulu tanggal mulainya"],
   },
   bookingEndDate: {
-    type: String,
+    type: Date,
     required: [true, "Eits, isi dulu tanggal selesainya"],
   },
   itemId: [

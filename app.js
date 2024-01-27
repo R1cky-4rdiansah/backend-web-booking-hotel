@@ -4,6 +4,10 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var engine = require("ejs-locals");
+var dbMongoose = require("./config/database");
+var methodeOverride = require("method-override");
+var flash = require("connect-flash");
+var session = require("express-session");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -11,8 +15,25 @@ var dashboardRouter = require("./routes/admin");
 
 var app = express();
 
+//server mongo db
+dbMongoose.then(() => console.log("Database tersambung"));
+dbMongoose.catch((err) => console.log("Database gagal tersambunng", err));
+
 //engine-local-ejs
-app.engine("ejs", engine); 
+app.engine("ejs", engine);
+
+//session express
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+  })
+);
+
+//connect flash
+app.use(flash());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -27,6 +48,7 @@ app.use(
   "/sb-admin2",
   express.static(path.join(__dirname, "node_modules/startbootstrap-sb-admin-2"))
 );
+app.use(methodeOverride("_method"));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

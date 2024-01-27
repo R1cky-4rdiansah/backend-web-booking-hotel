@@ -1,7 +1,16 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    <button
+      type="button"
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#addData"
+    >
+      <h6 class="m-0 font-weight-bold text-white">
+        <i class="fa fa-plus text-xs mr-1"></i> Item
+      </h6>
+    </button>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -19,11 +28,35 @@
           </tr>
         </thead>
         <tbody>
+          <% data.forEach((val, i) => { %>
           <tr>
-            <td class="text-center">1</td>
-            <td>Most Picked</td>
-            <td></td>
+            <td class="text-center"><%= i+1 %></td>
+            <td><%= val.name %></td>
+            <td class="d-flex justify-content-center align-items-center">
+              <button
+                onclick="editData(this)"
+                data-id="<%= val.id %>"
+                data-name="<%= val.name %>"
+                class="btn btn-sm btn-warning mr-2"
+              >
+                <i class="fa fa-edit mr-1"></i> Item
+              </button>
+              <form
+                action="/admin/deleteCategory/<%= val.id %>?_method=DELETE"
+                method="POST"
+                id="formDelete"
+              >
+                <button
+                  class="btn btn-sm btn-danger"
+                  type="button"
+                  onclick="deleteData(this)"
+                >
+                  <i class="fa fa-trash-alt mr-1"></i> Item
+                </button>
+              </form>
+            </td>
           </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>

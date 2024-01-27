@@ -1,7 +1,16 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    <button
+      type="button"
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#addData"
+    >
+      <h6 class="m-0 font-weight-bold text-white">
+        <i class="fa fa-plus text-xs mr-1"></i> Item
+      </h6>
+    </button>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -17,21 +26,43 @@
             <th class="text-center">Nama Bank</th>
             <th class="text-center">Nomor Rekening</th>
             <th class="text-center">Nama Penerima</th>
+            <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
+          <% data.forEach((val, i) => { %>
           <tr>
-            <td class="text-center">1</td>
-            <td class="text-center">Bank Mandiri</td>
-            <td class="text-center">123123123</td>
-            <td class="text-center">Ricky Ardiansah</td>
+            <td class="text-center"><%= i + 1 %></td>
+            <td class="text-center"><%= val.nameBank %></td>
+            <td class="text-center"><%= val.noRekening %></td>
+            <td class="text-center"><%= val.name %></td>
+            <td class="d-flex justify-content-center align-items-center">
+              <button
+                onclick="editData(this)"
+                data-id="<%= val.id %>"
+                data-namebank="<%= val.nameBank %>"
+                data-norekening="<%= val.noRekening %>"
+                data-name="<%= val.name %>"
+                class="btn btn-sm btn-warning mr-2"
+              >
+                <i class="fa fa-edit mr-1"></i> Item
+              </button>
+              <form
+                action="/admin/deleteBank/<%= val.id %>?_method=DELETE"
+                method="POST"
+                id="formDelete"
+              >
+                <button
+                  class="btn btn-sm btn-danger"
+                  type="button"
+                  onclick="deleteData(this)"
+                >
+                  <i class="fa fa-trash-alt mr-1"></i> Item
+                </button>
+              </form>
+            </td>
           </tr>
-          <tr>
-            <td class="text-center">2</td>
-            <td class="text-center">Bank Jateng</td>
-            <td class="text-center">32123213123</td>
-            <td class="text-center">Ricky Ardiansah</td>
-          </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>

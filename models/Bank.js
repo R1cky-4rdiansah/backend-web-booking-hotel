@@ -13,6 +13,10 @@ const bankSchema = new mongoose.Schema({
     type: String,
     required: [true, "Eits, isi dulu nama penransfer"],
   },
+  imageUrl: {
+    type: String,
+    required: [true, "Eits, upload dulu fotonya"],
+  },
 });
 
 const Bank = mongoose.model("Bank", bankSchema);

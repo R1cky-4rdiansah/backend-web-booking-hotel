@@ -1,10 +1,65 @@
-<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Dashboard')
-%> <% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Admin') %>
+<% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
 partial('../../parts/navbar')) %>
 
 <div class="container-fluid">
+  <% if(message != ""){ %>
+  <div
+    class="alert alert-<%= status %> alert-dismissible fade show"
+    role="alert"
+  >
+    <strong><%= message %></strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <% } %>
   <h1 class="h3 mb-4 text-gray-800">Menu Bank</h1>
   <%- partial('table-bank') %>
 </div>
 
-<% block('footer', partial('../../parts/footer')) %>
+<%- partial('add_modal') %> <%- partial('edit_modal') %> <% block('footer',
+partial('../../parts/footer')) %>
+
+<script>
+  function editData(e) {
+    const id = $(e).data("id");
+    const name = $(e).data("name");
+    const nameBank = $(e).data("namebank");
+    const noRekening = $(e).data("norekening");
+    $(".id-update").val(id);
+    $(".name-bank-update").val(nameBank);
+    $(".norek-update").val(noRekening);
+    $(".name-update").val(name);
+    $("#updateData").modal("show");
+  }
+
+  function deleteData(e) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success ml-2",
+        cancelButton: "btn btn-danger mr-2",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Kamu yakin mau hapus data?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, hapus!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          $(e).parent().submit();
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          return false;
+        }
+      });
+  }
+</script>
