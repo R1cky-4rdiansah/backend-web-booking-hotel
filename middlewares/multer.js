@@ -32,4 +32,9 @@ const upload = multer({
   limits: { fileSize: 1000000 },
 }).single("gambar");
 
-module.exports = { upload };
+const uploads = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 },
+}).array("gambar");
+
+module.exports = { upload, uploads };

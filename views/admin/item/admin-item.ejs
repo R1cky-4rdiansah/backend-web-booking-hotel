@@ -1,10 +1,95 @@
-<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Admin')
-%> <% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Admin') %>
+<% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
 partial('../../parts/navbar')) %>
 
 <div class="container-fluid">
+  <% if(message != ""){ %>
+  <div
+    class="alert alert-<%= status %> alert-dismissible fade show"
+    role="alert"
+  >
+    <strong><%= message %></strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <% } %>
   <h1 class="h3 mb-4 text-gray-800">Menu Item</h1>
   <%- partial('table-item') %>
 </div>
 
-<% block('footer', partial('../../parts/footer')) %>
+<%- partial('add_modal') %> <%- partial('edit_modal') %> <%-
+partial('image_modal') %> <% block('footer', partial('../../parts/footer')) %>
+
+<script>
+  const fileUpload = document.getElementById("gambar");
+  fileUpload.addEventListener("change", (event) => {
+    const prevImage = document.getElementById("previewImage");
+    var image = ``;
+    for (let index = 0; index < event.target.files.length; index++) {
+      const element = event.target.files[index];
+      image += `<div class="col-4 mb-1">
+            <img class="img-fluid position-relative border" src="${URL.createObjectURL(
+              event.target.files[index]
+            )}" alt="file${index + 1}">
+      </div>`;
+    }
+    if (event.target.files.length > 0) {
+      prevImage.innerHTML = image;
+      prevImage.removeAttribute("hidden");
+    } else {
+      prevImage.setAttribute("hidden", true);
+    }
+    console.log(event.target.files.length);
+  });
+
+  const fileUploadUpdaate = document.getElementById("update-gambar");
+  fileUploadUpdaate.addEventListener("change", (event) => {
+    const prevImage = document.getElementById("previewImageUpdate");
+    var image = ``;
+    for (let index = 0; index < event.target.files.length; index++) {
+      const element = event.target.files[index];
+      image += `<div class="col-4 mb-1">
+            <img class="img-fluid position-relative border" src="${URL.createObjectURL(
+              event.target.files[index]
+            )}" alt="file${index + 1}">
+      </div>`;
+    }
+    if (event.target.files.length > 0) {
+      prevImage.innerHTML = image;
+      prevImage.removeAttribute("hidden");
+    } else {
+      prevImage.setAttribute("hidden", true);
+    }
+    console.log(event.target.files.length);
+  });
+
+  function deleteData(e) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success ml-2",
+        cancelButton: "btn btn-danger mr-2",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Kamu yakin mau hapus data?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, hapus!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          $(e).parent().submit();
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          return false;
+        }
+      });
+  }
+</script>

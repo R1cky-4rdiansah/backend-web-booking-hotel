@@ -1,0 +1,190 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="showEditData"
+  tabindex="-1"
+  aria-labelledby="showEditDataLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showEditDataLabel">Update Data</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form
+        autocomplete="off"
+        action="/admin/updateItem?_method=PUT"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group">
+              <input
+                hidden
+                type="text"
+                class="form-control update-id"
+                id="nameItem"
+                name="id"
+              />
+            </div>
+            <div class="form-group col-4">
+              <label for="category">Kategori</label>
+              <select
+                required
+                id="category"
+                name="category"
+                class="form-control update-category"
+              ></select>
+            </div>
+            <div class="form-group col-4">
+              <label for="title">Judul</label>
+              <input
+                required
+                type="text"
+                class="form-control update-judul"
+                id="title"
+                name="title"
+              />
+            </div>
+            <div class="form-group col-4">
+              <label for="price">Harga</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">Rp</div>
+                </div>
+                <input
+                  required
+                  type="number"
+                  class="form-control update-harga"
+                  id="price"
+                  name="price"
+                />
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label for="country">Negara</label>
+              <input
+                required
+                type="text"
+                class="form-control update-negara"
+                id="country"
+                name="country"
+              />
+            </div>
+            <div class="form-group col-6">
+              <label for="city">Kota</label>
+              <input
+                required
+                type="text"
+                class="form-control update-kota"
+                id="city"
+                name="city"
+              />
+            </div>
+            <div class="form-group col-12">
+              <label for="gambar">Gambar Awal Hotel</label>
+              <div class="row my-2" id="gambarAwal"></div>
+            </div>
+            <div class="form-group col-12">
+              <label for="gambar">Gambar Hotel</label>
+              <div class="row my-2" id="previewImageUpdate"></div>
+              <input
+                accept="image/*"
+                type="file"
+                class="form-control"
+                id="update-gambar"
+                name="gambar"
+                multiple
+              />
+            </div>
+            <div class="form-group col-12">
+              <label for="description">Deskripsi</label>
+              <textarea
+                required
+                class="form-control update-deskripsi"
+                id="update-description"
+                name="description"
+                rows="10"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-warning">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Cek Editor -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+<script>
+  function deleteImage(idItem, idImage) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success ml-2",
+        cancelButton: "btn btn-danger mr-2",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Kamu yakin mau hapus data?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, hapus!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/admin/item/delete-image/${idItem}/${idImage}`, {
+            method: "DELETE",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              var image = "";
+              data.imageId.forEach((val, i) => {
+                image += `<div class="col-4 position-relative">
+            <button type="button" onclick="deleteImage('${idItem}','${val._id}')" class="btn btn-sm btn-danger text-white position-absolute" style="top: 4px; left: 16px">
+              <i class=" fa fa-trash"></i>
+            </button>
+            <img src="/${val.imageUrl}" alt="Gambar Ke-${i}" class="img-fluid mb-2" />
+            </div>`;
+              });
+              $("#gambarAwal").html(image);
+              Swal.fire({
+                title: "Data berhasil dihapus",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            })
+            .catch((err) => {
+              Swal.fire({
+                title: `${err}`,
+                icon: "error",
+              });
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          return false;
+        }
+      });
+  }
+</script>

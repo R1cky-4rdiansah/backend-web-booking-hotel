@@ -26,6 +26,7 @@
             <th class="text-center">Nama Bank</th>
             <th class="text-center">Nomor Rekening</th>
             <th class="text-center">Nama Penerima</th>
+            <th class="text-center">Gambar</th>
             <th class="text-center">Action</th>
           </tr>
         </thead>
@@ -36,30 +37,43 @@
             <td class="text-center"><%= val.nameBank %></td>
             <td class="text-center"><%= val.noRekening %></td>
             <td class="text-center"><%= val.name %></td>
-            <td class="d-flex justify-content-center align-items-center">
-              <button
-                onclick="editData(this)"
-                data-id="<%= val.id %>"
-                data-namebank="<%= val.nameBank %>"
-                data-norekening="<%= val.noRekening %>"
-                data-name="<%= val.name %>"
-                class="btn btn-sm btn-warning mr-2"
-              >
-                <i class="fa fa-edit mr-1"></i> Item
-              </button>
-              <form
-                action="/admin/deleteBank/<%= val.id %>?_method=DELETE"
-                method="POST"
-                id="formDelete"
-              >
+            <td class="text-center">
+              <div class="w-100 d-flex justify-content-center">
+                <img
+                  src="/<%= val.imageUrl %>"
+                  class="img-fluid border"
+                  style="max-width: 100px; max-height: 60px"
+                />
+              </div>
+            </td>
+            <td
+              class="text-center align-middle"
+            >
+              <div class="d-flex justify-content-center align-items-center">
                 <button
-                  class="btn btn-sm btn-danger"
-                  type="button"
-                  onclick="deleteData(this)"
+                  onclick="editData(this)"
+                  data-id="<%= val.id %>"
+                  data-namebank="<%= val.nameBank %>"
+                  data-norekening="<%= val.noRekening %>"
+                  data-name="<%= val.name %>"
+                  class="btn btn-sm btn-warning m-2"
                 >
-                  <i class="fa fa-trash-alt mr-1"></i> Item
+                  <i class="fa fa-edit"></i>
                 </button>
-              </form>
+                <form
+                  action="/admin/deleteBank/<%= val.id %>?_method=DELETE"
+                  method="POST"
+                  id="formDelete"
+                >
+                  <button
+                    class="btn btn-sm btn-danger"
+                    type="button"
+                    onclick="deleteData(this)"
+                  >
+                    <i class="fa fa-trash-alt"></i>
+                  </button>
+                </form>
+              </div>
             </td>
           </tr>
           <% }) %>

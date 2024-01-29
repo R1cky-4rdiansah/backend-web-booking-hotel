@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
 const itemSchema = new mongoose.Schema({
+  categoryId: {
+    type: ObjectId,
+    ref: "Category",
+  },
   title: {
     type: String,
     required: [true, "Eits, isi dulu judulnya"],
@@ -20,7 +24,7 @@ const itemSchema = new mongoose.Schema({
   },
   isPopular: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   description: {
     type: String,

@@ -1,7 +1,16 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    <button
+      type="button"
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#addData"
+    >
+      <h6 class="m-0 font-weight-bold text-white">
+        <i class="fa fa-plus text-xs mr-1"></i> Item
+      </h6>
+    </button>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -22,32 +31,97 @@
           </tr>
         </thead>
         <tbody>
+          <% data.forEach((val, i) => { %>
           <tr>
-            <td class="text-center">1</td>
-            <td>Kedungsono Hotel</td>
-            <td class="text-right">Rp 2.900.000</td>
-            <td class="text-center">Indonesia</td>
-            <td class="text-center">Sukoharjo</td>
-            <td class="text-center"></td>
+            <td class="text-center"><%= i+1 %></td>
+            <td><%= val.title %></td>
+            <td class="text-right"><%= val.price %></td>
+            <td class="text-center"><%= val.country %></td>
+            <td class="text-center"><%= val.city %></td>
+            <td
+              class="text-center d-flex justify-content-center align-items-center"
+            >
+              <button
+                class="btn btn-sm btn-primary mr-2"
+                onclick="showImage('<%= val._id %>')"
+              >
+                <i class="fa fa-images text-white"></i>
+              </button>
+              <button
+                class="btn btn-sm btn-warning mr-2"
+                onclick="showDetail('<%= val._id %>')"
+              >
+                <i class="fa fa-pencil-alt text-white"> </i>
+              </button>
+              <form
+                action="/admin/deleteItem/<%= val.id %>?_method=DELETE"
+                method="POST"
+                id="formDelete"
+              >
+                <button
+                  class="btn btn-sm btn-danger"
+                  type="button"
+                  onclick="deleteData(this)"
+                >
+                  <i class="fa fa-trash-alt"></i>
+                </button>
+              </form>
+            </td>
           </tr>
-          <tr>
-            <td class="text-center">2</td>
-            <td>Selogiri Hotel</td>
-            <td class="text-right">Rp 200.000</td>
-            <td class="text-center">Indonesia</td>
-            <td class="text-center">Wonogiri</td>
-            <td class="text-center"></td>
-          </tr>
-          <tr>
-            <td class="text-center">3</td>
-            <td>Tawangsari</td>
-            <td class="text-right">Rp 900.000</td>
-            <td class="text-center">Indonesia</td>
-            <td class="text-center">Sukoharjo</td>
-            <td class="text-center"></td>
-          </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>
   </div>
 </div>
+
+<script>
+  function showImage(id) {
+    fetch(`/admin/item/show-image/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        var image = "";
+        data.dataItem.imageId.forEach((val, i) => {
+          image += `<div class="col-6">
+            <img src="/${val.imageUrl}" alt="Gambar Ke-${i}" class="img-fluid mb-2 border rounded mb-2 p-2" />
+            </div>`;
+        });
+        $("#show-imageUrl").html(image);
+        $("#showImage").modal("show");
+      })
+      .catch((err) => alert(err));
+  }
+
+  function showDetail(id) {
+    fetch(`/admin/item/show-image/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        var categoryOption =
+          "<option selected disabled>-- Pilih Kategori --</option>";
+        var image = "";
+        data.category.forEach((val, i) => {
+          categoryOption += `<option value="${val._id}">${val.name}</option>`;
+        });
+        CKEDITOR.replace("update-description");
+        $(".update-category").html(categoryOption);
+        $(".update-category").val(data.dataItem.categoryId._id).change();
+        $(".update-id").val(data.dataItem._id);
+        $(".update-judul").val(data.dataItem.title);
+        $(".update-harga").val(data.dataItem.price);
+        $(".update-negara").val(data.dataItem.country);
+        $(".update-kota").val(data.dataItem.city);
+        $(".update-deskripsi").html(data.dataItem.description);
+        data.dataItem.imageId.forEach((val, i) => {
+          image += `<div class="col-4 position-relative">
+            <button type="button" onclick="deleteImage('${data.dataItem._id}','${val._id}')" class="btn btn-sm btn-danger text-white position-absolute" style="top: 4px; left: 16px">
+              <i class=" fa fa-trash"></i>
+            </button>
+            <img src="/${val.imageUrl}" alt="Gambar Ke-${i}" class="img-fluid border rounded mb-2 p-2" />
+            </div>`;
+        });
+        $("#gambarAwal").html(image);
+        $("#showEditData").modal("show");
+      })
+      .catch((err) => alert(err));
+  }
+</script>

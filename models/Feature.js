@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const featureSchema = new mongoose.Schema({
   name: {
@@ -13,6 +14,10 @@ const featureSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
     required: [true, "Eits, isi dulu icon"],
+  },
+  itemId: {
+    type: ObjectId,
+    ref: "Item",
   },
 });
 

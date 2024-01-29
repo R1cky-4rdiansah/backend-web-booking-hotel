@@ -19,7 +19,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/admin/updateBank?_method=PUT" method="POST">
+      <form
+        autocomplete="off"
+        action="/admin/updateBank?_method=PUT"
+        method="POST"
+        enctype="multipart/form-data"
+      >
         <div class="modal-body">
           <div class="form-group">
             <label for="nameBank">Nama Bank</label>
@@ -50,6 +55,16 @@
               class="form-control name-update"
               id="name"
               name="name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="gambar">Gambar</label>
+            <input
+              accept="image/*"
+              type="file"
+              class="form-control"
+              id="gambar"
+              name="gambar"
             />
           </div>
           <div class="form-group">

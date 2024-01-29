@@ -19,7 +19,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/admin/addBank" method="POST" enctype="multipart/form-data">
+      <form
+        action="/admin/addBank"
+        method="POST"
+        autocomplete="off"
+        enctype="multipart/form-data"
+      >
         <div class="modal-body">
           <div class="form-group">
             <label for="nameBank">Nama Bank</label>
@@ -54,6 +59,7 @@
           </div>
           <div class="form-group">
             <label for="gambar">Gambar</label>
+            <div hidden class="row my-2" id="previewImage"></div>
             <input
               required
               accept="image/*"
@@ -74,3 +80,25 @@
     </div>
   </div>
 </div>
+
+<script>
+  const fileUpload = document.getElementById("gambar");
+  fileUpload.addEventListener("change", (event) => {
+    const prevImage = document.getElementById("previewImage");
+    var image = ``;
+    for (let index = 0; index < event.target.files.length; index++) {
+      const element = event.target.files[index];
+      image += `<div class="col-12 mb-2">
+            <img class="img-fluid position-relative border rounded p-2" src="${URL.createObjectURL(
+              event.target.files[index]
+            )}" alt="file${index + 1}">
+      </div>`;
+    }
+    if (event.target.files.length > 0) {
+      prevImage.innerHTML = image;
+      prevImage.removeAttribute("hidden");
+    } else {
+      prevImage.setAttribute("hidden", true);
+    }
+  });
+</script>
