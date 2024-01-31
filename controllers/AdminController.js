@@ -2,6 +2,8 @@ const CategoryModel = require("../models/Category");
 const BankModel = require("../models/Bank");
 const ItemModel = require("../models/Item");
 const ImageModel = require("../models/Image");
+const FeatureModel = require("../models/Feature");
+const ActivityModel = require("../models/Activity");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.mongo;
 const fs = require("fs");
@@ -344,6 +346,213 @@ module.exports = {
       req.flash("status", "danger");
 
       res.redirect("/admin/item");
+    }
+  },
+  viewAdminItemFeature: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = await FeatureModel.find({ itemId: id });
+
+      res.render("admin/item/feature/admin-feature", {
+        data,
+        id,
+        message: req.flash("info"),
+        status: req.flash("status"),
+      });
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
+  },
+  addItemFeature: async (req, res) => {
+    const { name, qty, itemId } = req.body;
+    try {
+      const file = req.file.filename;
+      req.flash("info", "Data berhasil disimpan");
+      req.flash("status", "success");
+
+      const saveFeature = await FeatureModel.create({
+        name,
+        qty,
+        itemId,
+        imageUrl: `images/${file}`,
+      });
+
+      await ItemModel.findByIdAndUpdate(itemId, {
+        $push: { featureId: saveFeature._id },
+      });
+
+      res.redirect(`/admin/item/feature/${itemId}`);
+    } catch (error) {
+      req.flash("info", `${error.message}`);
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/feature/${itemId}`);
+    }
+  },
+  updateItemFeature: async (req, res) => {
+    const { id, name, qty } = req.body;
+    const dataAwal = await FeatureModel.findById(id);
+    try {
+      if (req.file) {
+        const file = req.file.filename;
+        if (fs.existsSync("./public/" + dataAwal.imageUrl)) {
+          fs.unlinkSync("./public/" + dataAwal.imageUrl);
+        }
+
+        await FeatureModel.findByIdAndUpdate(id, {
+          name,
+          qty,
+          imageUrl: `images/${file}`,
+        });
+      } else {
+        await FeatureModel.findByIdAndUpdate(id, {
+          name,
+          qty,
+        });
+      }
+
+      req.flash("info", "Data berhasil diupdate");
+      req.flash("status", "warning");
+
+      res.redirect(`/admin/item/feature/${dataAwal.itemId}`);
+    } catch (error) {
+      req.flash("info", `${error.message}`);
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/feature/${dataAwal.itemId}`);
+    }
+  },
+  deleteItemFeature: async (req, res) => {
+    const { id } = req.params;
+    const dataAwal = await FeatureModel.findById(id).populate({
+      path: "itemId",
+      select: "id",
+    });
+    const idItem = dataAwal.itemId._id;
+    try {
+      if (fs.existsSync("./public/" + dataAwal.imageUrl)) {
+        fs.unlinkSync("./public/" + dataAwal.imageUrl);
+      }
+
+      await ItemModel.findByIdAndUpdate(dataAwal.itemId._id, {
+        $pull: {
+          featureId: dataAwal._id,
+        },
+      });
+
+      await FeatureModel.findByIdAndDelete(id);
+
+      req.flash("info", "Data berhasil dihapus");
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/feature/${idItem}`);
+    } catch (error) {
+      req.flash("info", `${error.message}`);
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/feature/${idItem}`);
+    }
+  },
+  viewAdminItemActivity: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = await ActivityModel.find({ itemId: id });
+
+      res.render("admin/item/activity/admin-activity", {
+        data,
+        id,
+        message: req.flash("info"),
+        status: req.flash("status"),
+      });
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
+  },
+  addItemActivity: async (req, res) => {
+    const { name, itemId } = req.body;
+    try {
+      const file = req.file.filename;
+      req.flash("info", "Data berhasil disimpan");
+      req.flash("status", "success");
+
+      const saveActivity = await ActivityModel.create({
+        name,
+        itemId,
+        imageUrl: `images/${file}`,
+      });
+
+      await ItemModel.findByIdAndUpdate(itemId, {
+        $push: { activityId: saveActivity._id },
+      });
+
+      res.redirect(`/admin/item/activity/${itemId}`);
+    } catch (error) {
+      req.flash("info", `${error.message}`);
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/activity/${itemId}`);
+    }
+  },
+  updateItemActivity: async (req, res) => {
+    const { id, name } = req.body;
+    const dataAwal = await ActivityModel.findById(id);
+    try {
+      if (req.file) {
+        const file = req.file.filename;
+        if (fs.existsSync("./public/" + dataAwal.imageUrl)) {
+          fs.unlinkSync("./public/" + dataAwal.imageUrl);
+        }
+
+        await ActivityModel.findByIdAndUpdate(id, {
+          name,
+          imageUrl: `images/${file}`,
+        });
+      } else {
+        await ActivityModel.findByIdAndUpdate(id, {
+          name,
+        });
+      }
+
+      req.flash("info", "Data berhasil diupdate");
+      req.flash("status", "warning");
+
+      res.redirect(`/admin/item/activity/${dataAwal.itemId}`);
+    } catch (error) {
+      req.flash("info", `${error.message}`);
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/activity/${dataAwal.itemId}`);
+    }
+  },
+  deleteItemActivity: async (req, res) => {
+    const { id } = req.params;
+    const dataAwal = await ActivityModel.findById(id).populate({
+      path: "itemId",
+      select: "id",
+    });
+    const idItem = dataAwal.itemId._id;
+    try {
+      if (fs.existsSync("./public/" + dataAwal.imageUrl)) {
+        fs.unlinkSync("./public/" + dataAwal.imageUrl);
+      }
+
+      await ItemModel.findByIdAndUpdate(dataAwal.itemId._id, {
+        $pull: {
+          activityId: dataAwal._id,
+        },
+      });
+
+      await ActivityModel.findByIdAndDelete(id);
+
+      req.flash("info", "Data berhasil dihapus");
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/activity/${idItem}`);
+    } catch (error) {
+      req.flash("info", `${error.message}`);
+      req.flash("status", "danger");
+
+      res.redirect(`/admin/item/activity/${idItem}`);
     }
   },
   viewAdminBooking: async (req, res) => {

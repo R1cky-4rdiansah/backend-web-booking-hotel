@@ -1,0 +1,75 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="showEditData"
+  tabindex="-1"
+  aria-labelledby="showEditDataLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showEditDataLabel">Update Data</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form
+        autocomplete="off"
+        action="/admin/item/activity/updateActivity?_method=PUT"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control id-update"
+                id="nameItem"
+                name="id"
+                hidden
+              />
+            </div>
+            <div class="form-group col-6">
+              <label for="name">Judul</label>
+              <input
+                required
+                type="text"
+                class="form-control judul-update"
+                id="name"
+                name="name"
+              />
+            </div>
+            <div class="form-group col-6">
+              <label for="gambar">Gambar Awal Activity</label>
+              <div class="row my-2" id="gambarAwal"></div>
+            </div>
+            <div class="form-group col-6">
+              <label for="gambar">Gambar</label>
+              <div class="my-2" id="previewImageUpdate"></div>
+              <input
+                accept="image/*"
+                type="file"
+                class="form-control"
+                id="gambar-update"
+                name="gambar"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-warning">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<form
+  action="/admin/item/activity/addActivity"
+  method="POST"
+  autocomplete="off"
+  enctype="multipart/form-data"
+>
+  <div class="row">
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        id="nameItem"
+        name="itemId"
+        value="<%= id %>"
+        hidden
+      />
+    </div>
+    <div class="form-group col-6">
+      <label for="name">Judul</label>
+      <input required type="text" class="form-control" id="name" name="name" />
+    </div>
+    <div class="form-group col-12">
+      <label for="gambar">Gambar</label>
+      <div hidden class="my-2" id="previewImage"></div>
+      <input
+        required
+        accept="image/*"
+        type="file"
+        class="form-control"
+        id="gambar"
+        name="gambar"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-start align-items-center">
+    <button type="submit" class="btn btn-success">Tambah</button>
+  </div>
+</form>

@@ -28,6 +28,18 @@ router.delete(
 );
 router.delete("/deleteItem/:id", AdminController.deleteItem);
 
+//Feature Item
+router.get("/item/feature/:id", AdminController.viewAdminItemFeature);
+router.post("/item/feature/addFeature", upload, AdminController.addItemFeature);
+router.put("/item/feature/updateFeature", upload, AdminController.updateItemFeature);
+router.delete("/item/feature/deleteFeature/:id", AdminController.deleteItemFeature);
+
+//Activity Item
+router.get("/item/activity/:id", AdminController.viewAdminItemActivity);
+router.post("/item/activity/addActivity", upload, AdminController.addItemActivity);
+router.put("/item/activity/updateActivity", upload, AdminController.updateItemActivity);
+router.delete("/item/activity/deleteActivity/:id", AdminController.deleteItemActivity);
+
 router.get("/booking", AdminController.viewAdminBooking);
 
 module.exports = router;

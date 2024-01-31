@@ -15,14 +15,16 @@ const storage = multer.diskStorage({
 });
 
 function checkFileImage(file, cb) {
-  const fileTypes = /jpg|jpeg|png|gif/;
+  const fileTypes = /jpg|jpeg|png|gif|jfif/;
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimeTypes = fileTypes.test(file.mimeType);
+  const mimeTypes = fileTypes.test(file.mimetype);
   if (extName && mimeTypes) {
     cb(null, true);
   } else {
     cb(
-      "Errors, Hanya boleh gambar dengan ekstensi .jpg, .jpeg, .png, dan .gif"
+      new Error(
+        "Errors, Hanya boleh gambar dengan ekstensi .jpg, .jpeg, .png, .gif, dan .jfif"
+      )
     );
   }
 }
@@ -30,11 +32,17 @@ function checkFileImage(file, cb) {
 const upload = multer({
   storage: storage,
   limits: { fileSize: 1000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileImage(file, cb);
+  },
 }).single("gambar");
 
 const uploads = multer({
   storage: storage,
   limits: { fileSize: 1000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileImage(file, cb);
+  },
 }).array("gambar");
 
 module.exports = { upload, uploads };

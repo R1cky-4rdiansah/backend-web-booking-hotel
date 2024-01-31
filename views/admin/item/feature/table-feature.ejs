@@ -1,0 +1,70 @@
+<div class="table-responsive">
+  <table
+    class="table table-bordered"
+    id="dataTableFeature"
+    width="100%"
+    cellspacing="0"
+  >
+    <thead>
+      <tr>
+        <th class="text-center">No</th>
+        <th class="text-center">Judul</th>
+        <th class="text-center">Jumlah</th>
+        <th class="text-center">Gambar</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% data.forEach((val, i) => { %>
+      <tr>
+        <td class="text-center"><%= i + 1 %></td>
+        <td><%= val.name %></td>
+        <td class="text-center"><%= val.qty %></td>
+        <td class="center">
+          <div class="d-flex justify-content-center align-items-center">
+            <img
+              src="/<%= val.imageUrl %>"
+              class="img-fluid"
+              style="max-height: 60px; width: auto"
+              alt="Gambar data ke<%= i+ 1 %>"
+            />
+          </div>
+        </td>
+        <td>
+          <div class="d-flex justify-content-center align-items-center">
+            <button
+              class="btn btn-sm btn-warning mr-2"
+              onclick="showDetail('<%= val._id %>', '<%= val.name %>', '<%= val.qty %>', '<%= val.imageUrl %>')"
+            >
+              <i class="fa fa-pencil-alt text-white"> </i>
+            </button>
+            <form
+              action="/admin/item/feature/deleteFeature/<%= val.id %>?_method=DELETE"
+              method="POST"
+              id="formDelete"
+            >
+              <button
+                class="btn btn-sm btn-danger mr-2"
+                type="button"
+                onclick="deleteData(this)"
+              >
+                <i class="fa fa-trash-alt"></i>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $("#dataTableFeature").DataTable({
+      pageLength: 5,
+      lengthMenu: [5, 10]
+    });
+  });
+</script>

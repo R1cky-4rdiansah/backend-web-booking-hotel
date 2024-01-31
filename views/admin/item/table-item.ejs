@@ -35,7 +35,10 @@
           <tr>
             <td class="text-center"><%= i+1 %></td>
             <td><%= val.title %></td>
-            <td class="text-right"><%= val.price %></td>
+            <td class="text-right">
+              <%= new Intl.NumberFormat("id-ID", { style: "currency", currency:
+              "IDR", }).format(val.price) %>
+            </td>
             <td class="text-center"><%= val.country %></td>
             <td class="text-center"><%= val.city %></td>
             <td
@@ -59,13 +62,27 @@
                 id="formDelete"
               >
                 <button
-                  class="btn btn-sm btn-danger"
+                  class="btn btn-sm btn-danger mr-2"
                   type="button"
                   onclick="deleteData(this)"
                 >
                   <i class="fa fa-trash-alt"></i>
                 </button>
               </form>
+              <a
+                class="btn btn-sm btn-primary mr-2"
+                type="button"
+                href="/admin/item/feature/<%= val._id %>"
+              >
+                <i class="fa fa-chair"></i>
+              </a>
+              <a
+                class="btn btn-sm btn-primary"
+                type="button"
+                href="/admin/item/activity/<%= val._id %>"
+              >
+                <i class="fa fa-bicycle"></i>
+              </a>
             </td>
           </tr>
           <% }) %>
@@ -107,7 +124,10 @@
         $(".update-category").val(data.dataItem.categoryId._id).change();
         $(".update-id").val(data.dataItem._id);
         $(".update-judul").val(data.dataItem.title);
-        $(".update-harga").val(data.dataItem.price);
+        const priceItemUpdate = new Intl.NumberFormat("id-IN").format(
+          data.dataItem.price
+        );
+        $(".update-harga").val(priceItemUpdate);
         $(".update-negara").val(data.dataItem.country);
         $(".update-kota").val(data.dataItem.city);
         $(".update-deskripsi").html(data.dataItem.description);

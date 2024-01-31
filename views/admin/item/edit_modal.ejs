@@ -63,9 +63,18 @@
                 </div>
                 <input
                   required
+                  type="text"
+                  class="form-control update-harga"
+                  id="price-text-update"
+                  name="price-text-update"
+                  onkeypress="return onlyNumberKeyUpdate(event)"
+                />
+                <input
+                  hidden
+                  required
                   type="number"
                   class="form-control update-harga"
-                  id="price"
+                  id="price-update"
                   name="price"
                 />
               </div>
@@ -132,6 +141,18 @@
 <!-- Cek Editor -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
 <script>
+  function onlyNumberKeyUpdate(evt) {
+    // Only ASCII character in that range allowed
+    let ASCIICode = evt.which ? evt.which : evt.keyCode;
+    if (evt.target.value.length <= 0) {
+      if (ASCIICode > 31 && (ASCIICode <= 48 || ASCIICode > 57)) return false;
+      return true;
+    } else {
+      if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) return false;
+      return true;
+    }
+  }
+
   function deleteImage(idItem, idImage) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {

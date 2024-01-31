@@ -1,5 +1,5 @@
-<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Admin Item') %> <% block('sidebar', partial('../../parts/sidebar')) %> <%
-block('navbar', partial('../../parts/navbar')) %>
+<%- layout('../../../parts/layout') %> <% block('title', 'Halan Halan | Admin Feature & Activity') %> <% block('sidebar', partial('../../../parts/sidebar'))
+%> <% block('navbar', partial('../../../parts/navbar')) %>
 
 <div class="container-fluid">
   <% if(message != ""){ %>
@@ -13,28 +13,40 @@ block('navbar', partial('../../parts/navbar')) %>
     </button>
   </div>
   <% } %>
-  <h1 class="h3 mb-4 text-gray-800">Menu Item</h1>
-  <%- partial('table-item') %>
-  <div style="display: none" id="collapseFeature"></div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/admin/item">Item</a></li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Feature
+      </li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-4 text-gray-800">Menu Feature Item</h1>
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-6"><%- partial('add-feature') %></div>
+        <div class="col-6"><%- partial('table-feature') %></div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<%- partial('add_modal') %> <%- partial('edit_modal') %> <%-
-partial('image_modal') %> <% block('footer', partial('../../parts/footer')) %>
+<%- partial('edit-feature_modal') %> <% block('footer',
+partial('../../../parts/footer')) %>
 
 <script src="/javascripts/easy-number-separator.js"></script>
 
 <script>
-  easyNumberSeparator({
-    selector: "#price-text",
-    separator: ".",
-    resultInput: "#price",
-  });
-
-  easyNumberSeparator({
-    selector: "#price-text-update",
-    separator: ".",
-    resultInput: "#price-update",
-  });
+  function showDetail(id, nama, qty, gambar) {
+    var image = "";
+    $(".id-update").val(id);
+    $(".judul-update").val(nama);
+    $(".jumlah-update").val(qty);
+    image += `<img src="/${gambar}" alt="Gambar" class="img-fluid border rounded mb-2 p-2" />`;
+    $("#gambarAwal").html(image);
+    $("#showEditData").modal("show");
+  }
 
   const fileUpload = document.getElementById("gambar");
   fileUpload.addEventListener("change", (event) => {
@@ -42,11 +54,10 @@ partial('image_modal') %> <% block('footer', partial('../../parts/footer')) %>
     var image = ``;
     for (let index = 0; index < event.target.files.length; index++) {
       const element = event.target.files[index];
-      image += `<div class="col-4 mb-1">
-            <img class="img-fluid position-relative border" src="${URL.createObjectURL(
-              event.target.files[index]
-            )}" alt="file${index + 1}">
-      </div>`;
+      image += `
+        <img style="max-height: 300px;" class="img-fluid p-1 position-relative border rounded" src="${URL.createObjectURL(
+          event.target.files[index]
+        )}" alt="file${index + 1}">`;
     }
     if (event.target.files.length > 0) {
       prevImage.innerHTML = image;
@@ -56,17 +67,16 @@ partial('image_modal') %> <% block('footer', partial('../../parts/footer')) %>
     }
   });
 
-  const fileUploadUpdaate = document.getElementById("update-gambar");
-  fileUploadUpdaate.addEventListener("change", (event) => {
+  const fileUploadUpdate = document.getElementById("gambar-update");
+  fileUploadUpdate.addEventListener("change", (event) => {
     const prevImage = document.getElementById("previewImageUpdate");
     var image = ``;
     for (let index = 0; index < event.target.files.length; index++) {
       const element = event.target.files[index];
-      image += `<div class="col-4 mb-1">
-            <img class="img-fluid position-relative border" src="${URL.createObjectURL(
-              event.target.files[index]
-            )}" alt="file${index + 1}">
-      </div>`;
+      image += `
+        <img style="max-height: 300px;" class="img-fluid p-1 position-relative border rounded" src="${URL.createObjectURL(
+          event.target.files[index]
+        )}" alt="file${index + 1}">`;
     }
     if (event.target.files.length > 0) {
       prevImage.innerHTML = image;
@@ -96,10 +106,7 @@ partial('image_modal') %> <% block('footer', partial('../../parts/footer')) %>
       .then((result) => {
         if (result.isConfirmed) {
           $(e).parent().submit();
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           return false;
         }
       });
