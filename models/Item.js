@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
     required: [true, "Eits, isi dulu judulnya"],
   },
   price: {
-    type: String,
+    type: Number,
     required: [true, "Eits, isi dulu harganya"],
   },
   country: {
@@ -29,6 +29,10 @@ const itemSchema = new mongoose.Schema({
   description: {
     type: String,
     required: [true, "Eits, isi dulu deskripsinya"],
+  },
+  unit: {
+    type: String,
+    required: true,
   },
   imageId: [
     {

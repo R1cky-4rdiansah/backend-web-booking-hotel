@@ -1,4 +1,4 @@
-<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Admin Bank') %>
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Bank') %>
 <% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
 partial('../../parts/navbar')) %>
 
@@ -10,7 +10,7 @@ partial('../../parts/navbar')) %>
   >
     <strong><%= message %></strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
+      <span aria-hidden="true" class="text-white">&times;</span>
     </button>
   </div>
   <% } %>
@@ -27,10 +27,14 @@ partial('../../parts/footer')) %>
     const name = $(e).data("name");
     const nameBank = $(e).data("namebank");
     const noRekening = $(e).data("norekening");
+    const gambar = $(e).data("gambar");
+    var image = "";
     $(".id-update").val(id);
     $(".name-bank-update").val(nameBank);
     $(".norek-update").val(noRekening);
     $(".name-update").val(name);
+    image += `<img src="/${gambar}" alt="Gambar" class="img-fluid border rounded mb-2 p-2" />`;
+    $("#gambarAwal").html(image);
     $("#updateData").modal("show");
   }
 

@@ -10,49 +10,58 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     required: [true, "Eits, isi dulu tanggal selesainya"],
   },
-  itemId: [
-    {
-      _id: {
-        type: ObjectId,
-        ref: "Item",
-      },
-      price: {
-        type: Number,
-        required: [true, "Eits, isi dulu harganya"],
-      },
-      night: {
-        type: Number,
-        required: [true, "Eits, isi dulu jumlah menginapnya"],
-      },
-    },
-  ],
-  bank: [
-    {
-      type: ObjectId,
-      ref: "Bank",
-    },
-  ],
-  memberId: [
-    {
-      type: ObjectId,
-      ref: "Member",
-    },
-  ],
-  proofPayment: {
-    type: String,
-    required: [true, "Eits, upload dulu foto pembayarannya"],
-  },
-  bankFrom: {
-    type: Boolean,
-    required: [true, "Eits, isi dulu nama banknya"],
-  },
-  accountHolder: {
-    type: String,
-    required: [true, "Eits, isi dulu nama penrasfernya"],
-  },
-  status: {
+  invoice: {
     type: String,
     required: true,
+  },
+  itemId: {
+    _id: {
+      type: ObjectId,
+      ref: "Item",
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    duration: {
+      type: Number,
+      required: true,
+    },
+  },
+  total: {
+    type: Number,
+    required: true,
+  },
+  bankTo: {
+    type: ObjectId,
+    ref: "Bank",
+  },
+  memberId: {
+    type: ObjectId,
+    ref: "Member",
+  },
+  payments: {
+    proofPayment: {
+      type: String,
+      required: [true, "Eits, upload dulu foto pembayarannya"],
+    },
+    bankFrom: {
+      type: String,
+      required: String[(true, "Eits, isi dulu nama banknya")],
+    },
+    accountHolder: {
+      type: String,
+      required: [true, "Eits, isi dulu nama penrasfernya"],
+    },
+    status: {
+      type: String,
+      required: true,
+    },
   },
 });
 

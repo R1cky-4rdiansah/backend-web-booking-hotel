@@ -8,7 +8,7 @@
 >
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header bg-primary text-white">
         <h5 class="modal-title" id="updateDataLabel">Update Data</h5>
         <button
           type="button"
@@ -16,7 +16,7 @@
           data-dismiss="modal"
           aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" class="text-white">&times;</span>
         </button>
       </div>
       <form
@@ -58,12 +58,17 @@
             />
           </div>
           <div class="form-group">
+            <label for="gambar">Gambar Bank</label>
+            <div id="gambarAwal"></div>
+          </div>
+          <div class="form-group">
             <label for="gambar">Gambar</label>
+            <div hidden class="mb-2" id="previewImageUpdate"></div>
             <input
               accept="image/*"
               type="file"
               class="form-control"
-              id="gambar"
+              id="gambar-update"
               name="gambar"
             />
           </div>
@@ -87,3 +92,24 @@
     </div>
   </div>
 </div>
+
+<script>
+  const fileUploadUpdate = document.getElementById("gambar-update");
+  fileUploadUpdate.addEventListener("change", (event) => {
+    const prevImage = document.getElementById("previewImageUpdate");
+    var image = ``;
+    for (let index = 0; index < event.target.files.length; index++) {
+      const element = event.target.files[index];
+      image += `
+            <img class="img-fluid position-relative border rounded p-2" src="${URL.createObjectURL(
+              event.target.files[index]
+            )}" alt="file${index + 1}" />`;
+    }
+    if (event.target.files.length > 0) {
+      prevImage.innerHTML = image;
+      prevImage.removeAttribute("hidden");
+    } else {
+      prevImage.setAttribute("hidden", true);
+    }
+  });
+</script>
