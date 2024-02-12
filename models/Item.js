@@ -32,7 +32,15 @@ const itemSchema = new mongoose.Schema({
   },
   unit: {
     type: String,
+    default: "malam",
+  },
+  unit: {
+    type: String,
     required: true,
+  },
+  sumBooking: {
+    type: Number,
+    default: 0,
   },
   imageId: [
     {

@@ -45,4 +45,6 @@ const uploads = multer({
   },
 }).array("gambar");
 
-module.exports = { upload, uploads };
+const none = multer().none();
+
+module.exports = { upload, uploads, none };

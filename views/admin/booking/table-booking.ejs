@@ -1,8 +1,5 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-  </div>
   <div class="card-body">
     <div class="table-responsive">
       <table
@@ -15,53 +12,56 @@
           <tr>
             <th class="text-center">No</th>
             <th class="text-center">Tanggal</th>
+            <th class="text-center">Invoice</th>
             <th class="text-center">Judul</th>
             <th class="text-center">Nama Member</th>
-            <th class="text-center">Nama Bank</th>
             <th class="text-center">Status</th>
             <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
+          <% data.forEach((val, i) => { %>
           <tr>
-            <td class="text-center">1</td>
-            <td class="text-center">2023-01-02 2023-01-05</td>
-            <td>Hotel Kedungsono</td>
-            <td>Rcky Ardiansah</td>
-            <td>Bank BCA</td>
+            <td class="text-center"><%= i+1 %></td>
             <td class="text-center">
-              <span class="badge badge-success p-1"
-                ><i class="fa fa-check mr-1"></i> Berhasil</span
-              >
+              <p>
+                <%= new Intl.DateTimeFormat("id", { weekday: 'long', day:
+                "numeric", month: "long", year: "numeric"
+                }).format(val.bookingStartDate) %> <br />
+                s/d <br />
+                <%= new Intl.DateTimeFormat("id", { weekday: 'long', day:
+                "numeric", month: "long", year: "numeric"
+                }).format(val.bookingEndDate) %>
+              </p>
             </td>
-            <td class="text-center"></td>
-          </tr>
-          <tr>
-            <td class="text-center">1</td>
-            <td class="text-center">2023-01-01 2023-01-01</td>
-            <td>Hotel Kedungsono</td>
-            <td>Waluto</td>
-            <td>Bank BRI</td>
+            <td><%= val.invoice %></td>
+            <td><%= val.itemId.title %></td>
+            <td><%= val.memberId.firstName %> <%= val.memberId.lastName %></td>
             <td class="text-center">
-              <span class="badge badge-danger p-1"
-                ><i class="fa fa-times mr-1"></i> Gagal</span
-              >
-            </td>
-            <td class="text-center"></td>
-          </tr>
-          <tr>
-            <td class="text-center">1</td>
-            <td class="text-center">2023-01-05 2023-01-06</td>
-            <td>Hotel Kedungsono</td>
-            <td>Boyah</td>
-            <td>Bank Mandiri</td>
-            <td class="text-center">
+              <% if(val.payments.status == 'Proses') { %>
               <span class="badge badge-warning p-1"
-                ><i class="fa fa-clock mr-1"></i> Tertunda</span
-              >
+                ><i class="fa fa-times-circle mr-1"></i> <%= val.payments.status
+                %>
+              </span>
+              <% } else if(val.payments.status == 'Terima') { %>
+              <span class="badge badge-success p-1"
+                ><i class="fa fa-check mr-1"></i> <%= val.payments.status %>
+              </span>
+              <% } else if (val.payments.status == 'Tolak') { %>
+              <span class="badge badge-danger p-1"
+                ><i class="fa fa-times mr-1"></i> <%= val.payments.status %>
+              </span>
+              <% } %>
             </td>
-            <td class="text-center"></td>
+            <td class="text-center">
+              <form action="/admin/booking/<%= val._id %>" method="get">
+                <button class="btn btn-primary btn-sm">
+                  <i class="fa fa-eye"></i>
+                </button>
+              </form>
+            </td>
           </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>

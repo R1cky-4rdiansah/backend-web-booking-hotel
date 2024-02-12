@@ -14,23 +14,18 @@ const usersSchema = new mongoose.Schema({
 
 usersSchema.pre("save", async function (next) {
   const user = this;
-  if (!user.isModified("password")) {
-    return next();
-  }
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) {
+  if (user.isModified("password") || user.isNew) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(user.password, salt);
+      user.password = hash;
+      next();
+    } catch (err) {
       return next(err);
     }
-    bcrypt.hash(user.password, salt, null, (error, hash) => {
-      if (error) {
-        return next(error);
-      }
-      console.log("HASH: ", hash);
-      user.password = hash;
-      console.log("USER.PASSWORD: ", user.password);
-      next();
-    });
-  });
+  } else {
+    return next();
+  }
 });
 
 const Users = mongoose.model("Users", usersSchema);

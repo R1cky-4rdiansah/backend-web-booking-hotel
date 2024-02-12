@@ -1,7 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { upload, uploads } = require("../middlewares/multer");
+const { upload, uploads, none } = require("../middlewares/multer");
 const AdminController = require("../controllers/AdminController");
+const auth = require("../middlewares/auth");
+
+//Route Login
+router.get("/login", AdminController.viewLogin);
+router.post("/login", AdminController.loginAction);
+router.post("/logout", AdminController.logoutAction);
+
+router.use(auth);
 
 router.get("/dashboard", AdminController.viewAdminDashboard);
 
@@ -31,15 +39,36 @@ router.delete("/deleteItem/:id", AdminController.deleteItem);
 //Feature Item
 router.get("/item/feature/:id", AdminController.viewAdminItemFeature);
 router.post("/item/feature/addFeature", upload, AdminController.addItemFeature);
-router.put("/item/feature/updateFeature", upload, AdminController.updateItemFeature);
-router.delete("/item/feature/deleteFeature/:id", AdminController.deleteItemFeature);
+router.put(
+  "/item/feature/updateFeature",
+  upload,
+  AdminController.updateItemFeature
+);
+router.delete(
+  "/item/feature/deleteFeature/:id",
+  AdminController.deleteItemFeature
+);
 
 //Activity Item
 router.get("/item/activity/:id", AdminController.viewAdminItemActivity);
-router.post("/item/activity/addActivity", upload, AdminController.addItemActivity);
-router.put("/item/activity/updateActivity", upload, AdminController.updateItemActivity);
-router.delete("/item/activity/deleteActivity/:id", AdminController.deleteItemActivity);
+router.post(
+  "/item/activity/addActivity",
+  upload,
+  AdminController.addItemActivity
+);
+router.put(
+  "/item/activity/updateActivity",
+  upload,
+  AdminController.updateItemActivity
+);
+router.delete(
+  "/item/activity/deleteActivity/:id",
+  AdminController.deleteItemActivity
+);
 
+//Booking Item
 router.get("/booking", AdminController.viewAdminBooking);
+router.get("/booking/:id", AdminController.showBooking);
+router.post("/booking/action/:id", AdminController.actionBooking);
 
 module.exports = router;

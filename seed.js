@@ -11,7 +11,9 @@ var Users = require("./models/Users");
 
 // Connect to MongoDB via Mongoose
 mongoose
-  .connect("mongodb://127.0.0.1:27017/server-halan-halan")
+  .connect(
+    "mongodb+srv://superhalanhalan:9BxjrLWEuuB6E27O@cluster0.9q5jrp5.mongodb.net/server-halan-halan?retryWrites=true&w=majority"
+  )
   .then(() => console.log("Mongoose tersambung"))
   .catch((err) => console.log(err));
 
@@ -20,7 +22,7 @@ var dataCategory = [
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc901111"),
     name: "Houses with beauty backyard",
     itemId: [
-      { _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222") },
+      { _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902231") },
       { _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902223") },
       { _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902224") },
       { _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902225") },
@@ -57,6 +59,7 @@ var dataItem = [
     country: "Indonesia",
     city: "Lampung",
     isPopular: false,
+    sumBooking: 2,
     description:
       "Minimal techno is a minimalist subgenre of techno music. It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development. Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.",
     unit: "night",
@@ -103,6 +106,7 @@ var dataItem = [
     country: "Indonesia",
     city: "Bandung",
     isPopular: false,
+    sumBooking: 5,
     description:
       "Minimal techno is a minimalist subgenre of techno music. It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development. Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.",
     unit: "night",
@@ -283,6 +287,7 @@ var dataItem = [
     country: "Indonesia",
     city: "Bandung",
     isPopular: false,
+    sumBooking: 2,
     description:
       "Minimal techno is a minimalist subgenre of techno music. It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development. Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.",
     unit: "night",
@@ -933,23 +938,191 @@ var dataActivity = [
 var dataBooking = [
   {
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee1"),
-    bookingStartDate: "12-12-2020",
-    bookingEndDate: "12-12-2020",
+    bookingStartDate: "06-02-2024",
+    bookingEndDate: "06-04-2024",
     invoice: "CB23KKJLM43244",
     itemId: {
       _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
-      title: "Village Angga",
-      price: 320000,
+      title: "Tabby Town",
+      price: 120000,
       duration: 2,
     },
-    total: 640000,
+    total: 240000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankTo: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
       status: "Proses",
-      accountHolder: "Rocky",
+      accountHolder: "Ricky",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee2"),
+    bookingStartDate: "02-12-2024",
+    bookingEndDate: "02-14-2024",
+    invoice: "CB23KKJLM43245",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
+      title: "Tabby Town",
+      price: 120000,
+      duration: 2,
+    },
+    total: 240000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "BCA",
+      status: "Proses",
+      accountHolder: "Ardiansah",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee3"),
+    bookingStartDate: "01-02-2024",
+    bookingEndDate: "01-04-2024",
+    invoice: "CB23KKJLM43246",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902223"),
+      title: "Seattle Rain",
+      price: 200000,
+      duration: 2,
+    },
+    total: 400000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "BCA",
+      status: "Proses",
+      accountHolder: "Gery",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee4"),
+    bookingStartDate: "01-01-2024",
+    bookingEndDate: "01-03-2024",
+    invoice: "CB2K&YJLM43246",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902227"),
+      title: "Podo Wae",
+      price: 200000,
+      duration: 2,
+    },
+    total: 400000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "BCA",
+      status: "Proses",
+      accountHolder: "Woke",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee5"),
+    bookingStartDate: "05-08-2024",
+    bookingEndDate: "05-10-2024",
+    invoice: "CB23KKJLMIH46",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902228"),
+      title: "Silver Rain",
+      price: 200000,
+      duration: 2,
+    },
+    total: 400000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "Mandiri",
+      status: "Proses",
+      accountHolder: "Lolo",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee6"),
+    bookingStartDate: "01-02-2024",
+    bookingEndDate: "01-04-2024",
+    invoice: "CB23KKJLM432123",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902229"),
+      title: "Cashville",
+      price: 200000,
+      duration: 2,
+    },
+    total: 400000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "BNI",
+      status: "Proses",
+      accountHolder: "Yuhu",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee7"),
+    bookingStartDate: "01-11-2024",
+    bookingEndDate: "01-13-2024",
+    invoice: "CB23KKJLM4326643",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902229"),
+      title: "Cashville",
+      price: 200000,
+      duration: 2,
+    },
+    total: 400000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "BNI",
+      status: "Proses",
+      accountHolder: "Yuhu",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee8"),
+    bookingStartDate: "02-11-2024",
+    bookingEndDate: "02-13-2024",
+    invoice: "CB23KKJLM4326643",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
+      title: "Tabby Town",
+      price: 120000,
+      duration: 2,
+    },
+    total: 240000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "BNI",
+      status: "Proses",
+      accountHolder: "Yuhu",
+    },
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc90cee9"),
+    bookingStartDate: "02-11-2024",
+    bookingEndDate: "02-13-2024",
+    invoice: "CB23KKJLM4326643",
+    itemId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902231"),
+      title: "One Five",
+      price: 200000,
+      duration: 2,
+    },
+    total: 400000,
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
+    payments: {
+      proofPayment: "images/bukti-bayar.jpg",
+      bankFrom: "Jateng",
+      status: "Proses",
+      accountHolder: "Dolores",
     },
   },
 ];
@@ -1015,7 +1188,7 @@ const seeDb = async () => {
   await Booking.insertMany(dataBooking);
   await Member.insertMany(dataMember);
   await Bank.insertMany(dataBank);
-  await Users.insertMany(dataUsers);
+  await Users.create(dataUsers);
 };
 
 seeDb().then(() => {

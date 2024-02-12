@@ -12,6 +12,7 @@ var session = require("express-session");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var dashboardRouter = require("./routes/admin");
+var apiRouter = require("./routes/api");
 
 var app = express();
 
@@ -28,7 +29,7 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 60000 * 60 * 24 },
   })
 );
 
@@ -53,6 +54,7 @@ app.use(methodeOverride("_method"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/admin", dashboardRouter);
+app.use("/api/v1", apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

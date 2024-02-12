@@ -1,0 +1,100 @@
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Detail Booking') %> <% block('sidebar', partial('../../parts/sidebar')) %> <%
+block('navbar', partial('../../parts/navbar')) %>
+
+<div class="container-fluid">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/admin/booking">Booking</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail Booking</li>
+    </ol>
+  </nav>
+  <% if(message != ""){ %>
+  <div
+    class="alert alert-<%= status %> alert-dismissible fade show"
+    role="alert"
+  >
+    <strong><%= message %></strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true" class="text-dark">&times;</span>
+    </button>
+  </div>
+  <% } %>
+  <h1 class="h3 mb-4 text-gray-800">Menu Detail Booking</h1>
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-6">
+          <a href="/<%= data.payments.proofPayment %>" target="_blank">
+            <figure style="width: 100%; height: 100%; margin: 0; padding: 0">
+              <img
+                src="/<%= data.payments.proofPayment %>"
+                style="object-fit: contain; width: 100%; height: 100%"
+              />
+            </figure>
+          </a>
+        </div>
+        <div class="col-6">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <tbody class="border">
+                <tr>
+                  <td class="font-weight-bolder" style="">Nama Member</td>
+                  <td>
+                    <%= data.memberId.firstName %> <%= data.memberId.lastName %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bolder">Total</td>
+                  <td>
+                    <%= new Intl.NumberFormat("id-ID", { style: "currency",
+                    currency: "IDR", }).format(data.total) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bolder">Bank</td>
+                  <td><%= data.payments.bankFrom %></td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bolder">Hotel</td>
+                  <td><%= data.itemId.title %></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <% if(data.payments.status == 'Proses') { %>
+              <form
+                action="/admin/booking/action/<%= data._id %>"
+                method="post"
+              >
+                <input type="text" value="Tolak" name="action" hidden />
+                <button class="btn btn-sm btn-danger text-white">
+                  <i class="fa fa-times mr-1"> </i>
+                  Tolak
+                </button>
+              </form>
+              <form
+                action="/admin/booking/action/<%= data._id %>"
+                method="post"
+              >
+                <input type="text" value="Terima" name="action" hidden />
+                <button class="btn btn-sm btn-success text-white">
+                  <i class="fa fa-check mr-1"> </i>
+                  Terima
+                </button>
+              </form>
+              <% } else { %>
+              <button
+                class="btn btn-<%= data.payments.status == 'Terima' ? 'success' : 'danger' %> disabled btn-block"
+              >
+                <%= data.payments.status %>
+              </button>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% block('footer', partial('../../parts/footer')) %>

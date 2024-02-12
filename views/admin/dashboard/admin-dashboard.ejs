@@ -1,10 +1,189 @@
-<%- layout('../../parts/layout') %> 
-<% block('title', 'Halan Halan | Admin')  %>
-<% block('sidebar', partial('../../parts/sidebar')) %>
-<% block('navbar', partial('../../parts/navbar')) %>
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Dashboard')
+%> <% block('sidebar', partial('../../parts/sidebar')) %> <% block('navbar',
+partial('../../parts/navbar')) %>
 
 <div class="container-fluid">
-  <h1 class="h3 mb-4 text-gray-800">Admin Dashboard</h1>
+  <h1 class="h3 mb-4 text-gray-800">Menu Dashboard</h1>
+  <div class="row w-100">
+    <div class="col-lg-4 col-12 mb-3">
+      <div class="card shadow border-left-info">
+        <div
+          class="card-body p-4 d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex flex-column justify-content-center">
+            <h6 class="card-title text-muted">Members</h6>
+            <h4 class="card-title fw-bold text-info"><%= member %></h4>
+            <p class="card-text">Total pengunjung terakhir ini</p>
+          </div>
+          <i style="font-size: 50px" class="fa fa-user text-gray-300"> </i>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-12 mb-3">
+      <div class="card shadow border-left-success">
+        <div
+          class="card-body p-4 d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex flex-column justify-content-center">
+            <h6 class="card-title text-muted">Items</h6>
+            <h4 class="card-title fw-bold text-success"><%= item %></h4>
+            <p class="card-text">Total hotel terakhir ini</p>
+          </div>
+          <i style="font-size: 50px" class="fa fa-hotel text-gray-300"> </i>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-12 mb-3">
+      <div class="card shadow border-left-warning">
+        <div
+          class="card-body p-4 d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex flex-column justify-content-center">
+            <h6 class="card-title text-muted">Bookings</h6>
+            <h4 class="card-title fw-bold text-warning"><%= booking %></h4>
+            <p class="card-text">Total order terakhir ini</p>
+          </div>
+          <i style="font-size: 50px" class="fa fa-shopping-cart text-gray-300">
+          </i>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mb-3">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold">
+            Grafik Pendapatan <%= new Date().getFullYear() %>
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="myAreaChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <% block('footer', partial('../../parts/footer')) %>
+
+<script>
+  var ctx = document.getElementById("myAreaChart");
+  var myLineChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "Mei",
+        "Jun",
+        "Jul",
+        "Agu",
+        "Sep",
+        "Okt",
+        "Nov",
+        "Des",
+      ],
+      datasets: [
+        {
+          label: "Pendapatan",
+          lineTension: 0.3,
+          backgroundColor: "rgba(78, 115, 223, 0.05)",
+          borderColor: "rgba(78, 115, 223, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointBorderColor: "rgba(78, 115, 223, 1)",
+          pointHoverRadius: 3,
+          pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: `<%= data %>`.split(","),
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 25,
+          top: 25,
+          bottom: 0,
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            time: {
+              unit: "date",
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              maxTicksLimit: 12,
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              maxTicksLimit: 5,
+              padding: 10,
+              // Include a dollar sign in the ticks
+              callback: function (value, index, values) {
+                return new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(value);
+              },
+            },
+            gridLines: {
+              color: "rgb(234, 236, 244)",
+              zeroLineColor: "rgb(234, 236, 244)",
+              drawBorder: false,
+              borderDash: [2],
+              zeroLineBorderDash: [2],
+            },
+          },
+        ],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: "#6e707e",
+        titleFontSize: 14,
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        intersect: false,
+        mode: "index",
+        caretPadding: 10,
+        callbacks: {
+          label: function (tooltipItem, chart) {
+            var datasetLabel =
+              chart.datasets[tooltipItem.datasetIndex].label || "";
+            return (
+              datasetLabel +
+              ": " +
+              new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              }).format(tooltipItem.yLabel)
+            );
+          },
+        },
+      },
+    },
+  });
+</script>

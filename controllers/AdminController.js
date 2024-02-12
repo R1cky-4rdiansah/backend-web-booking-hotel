@@ -4,22 +4,137 @@ const ItemModel = require("../models/Item");
 const ImageModel = require("../models/Image");
 const FeatureModel = require("../models/Feature");
 const ActivityModel = require("../models/Activity");
+const UserModel = require("../models/Users");
+const BookingModel = require("../models/Booking");
+const MemberModel = require("../models/Member");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.mongo;
 const fs = require("fs");
+const bcrypt = require("bcryptjs");
+const { group } = require("console");
 
 module.exports = {
-  viewAdminDashboard: (req, res) => {
-    res.render("admin/dashboard/admin-dashboard");
+  viewLogin: (req, res) => {
+    try {
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          status: req.flash("status"),
+          message: req.flash("info"),
+        });
+      } else {
+        res.redirect("/admin/dashboard");
+      }
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
+  },
+  loginAction: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const user = await UserModel.findOne({ username: username });
+      if (!user) {
+        req.flash("status", "danger");
+        req.flash("info", "Username yang kamu input tidak ada nih!");
+        res.redirect("/admin/login");
+      }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        req.flash("status", "danger");
+        req.flash("info", "Password yang kamu input tidak sama nih!");
+        res.redirect("/admin/login");
+      }
+
+      req.session.user = {
+        userId: user._id,
+        username,
+      };
+
+      res.redirect("/admin/dashboard");
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
+  },
+  logoutAction: async (req, res) => {
+    req.session.destroy();
+    res.json({ message: "Logout" }, 200);
+  },
+  viewAdminDashboard: async (req, res) => {
+    try {
+      const user = req.session.user.username;
+
+      const member = await MemberModel.find({}).count();
+      const item = await ItemModel.find({}).count();
+      const booking = await BookingModel.find({}).count();
+
+      const year = new Date().getFullYear();
+
+      const dataBooking = await BookingModel.aggregate([
+        {
+          $match: {
+            bookingStartDate: {
+              $gte: new Date(`${year}-01-01`),
+              $lt: new Date(`${year + 1}-01-01`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              month: { $month: "$bookingStartDate" },
+              year: { $year: "$bookingStartDate" },
+            },
+            totalPrice: { $sum: "$total" },
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+      ]);
+
+      // const dataBooking = await BookingModel.find({
+      //   "payments.status": "Terima",
+      //   bookingStartDate: {
+      //     $gte: `${year}-01-01`,
+      //     $lt: `${year + 1}-01-01`,
+      //   },
+      // });
+
+      var data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      if (dataBooking.length > 0) {
+        dataBooking.forEach((val) => {
+          const bulan = val._id.month - 1;
+          for (let i = 0; i < 12; i++) {
+            if (i == bulan) {
+              data[i] += val.totalPrice;
+            } else {
+              data[i] += 0;
+            }
+          }
+        });
+      }
+
+      res.render("admin/dashboard/admin-dashboard", {
+        data,
+        user,
+        member,
+        item,
+        booking,
+      });
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
   },
   viewAdminCategory: async (req, res) => {
     try {
       const data = await CategoryModel.find({});
+      const user = req.session.user.username;
 
       res.render("admin/category/admin-category", {
         data,
         message: req.flash("info"),
         status: req.flash("status"),
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -78,6 +193,7 @@ module.exports = {
         data,
         message: req.flash("info"),
         status: req.flash("status"),
+        user: req.session.user.username,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -180,6 +296,7 @@ module.exports = {
         category,
         message: req.flash("info"),
         status: req.flash("status"),
+        user: req.session.user.username,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -358,6 +475,7 @@ module.exports = {
         id,
         message: req.flash("info"),
         status: req.flash("status"),
+        user: req.session.user.username,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -463,6 +581,7 @@ module.exports = {
         id,
         message: req.flash("info"),
         status: req.flash("status"),
+        user: req.session.user.username,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -557,13 +676,45 @@ module.exports = {
   },
   viewAdminBooking: async (req, res) => {
     try {
-      const data = await ItemModel.find({});
+      const data = await BookingModel.find({})
+        .populate("memberId")
+        .sort({ _id: -1 });
 
       res.render("admin/booking/admin-booking", {
         data,
+        user: req.session.user.username,
+      });
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
+  },
+  showBooking: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await BookingModel.findById(id).populate("memberId");
+
+      res.render("admin/booking/detail-booking", {
         message: req.flash("info"),
         status: req.flash("status"),
+        data,
+        user: req.session.user.username,
       });
+    } catch (error) {
+      res.render("error/errorPage", { message: error.message });
+    }
+  },
+  actionBooking: async (req, res) => {
+    const { id } = req.params;
+    const { action } = req.body;
+    try {
+      const data = await BookingModel.findById(id);
+      data.payments.status = action;
+      data.save();
+
+      req.flash("info", "Data berhasil diupdate");
+      req.flash("status", "success");
+
+      res.redirect(`/admin/booking/${id}`);
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
     }
