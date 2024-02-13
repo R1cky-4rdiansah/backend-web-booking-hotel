@@ -949,7 +949,6 @@ var dataBooking = [
     },
     total: 240000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -970,7 +969,6 @@ var dataBooking = [
     },
     total: 240000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -991,7 +989,6 @@ var dataBooking = [
     },
     total: 400000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -1012,7 +1009,6 @@ var dataBooking = [
     },
     total: 400000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -1033,7 +1029,6 @@ var dataBooking = [
     },
     total: 400000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "Mandiri",
@@ -1054,7 +1049,6 @@ var dataBooking = [
     },
     total: 400000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BNI",
@@ -1075,7 +1069,6 @@ var dataBooking = [
     },
     total: 400000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BNI",
@@ -1096,7 +1089,6 @@ var dataBooking = [
     },
     total: 240000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BNI",
@@ -1117,7 +1109,6 @@ var dataBooking = [
     },
     total: 400000,
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    bankId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "Jateng",
