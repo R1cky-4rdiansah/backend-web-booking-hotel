@@ -24,12 +24,14 @@ dbMongoose.catch((err) => console.log("Database gagal tersambunng", err));
 app.engine("ejs", engine);
 
 //session express
+// app.set("trust proxy", 1);
 app.use(
   session({
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60000 * 60 * 24 },
+    proxy: true,
   })
 );
 
