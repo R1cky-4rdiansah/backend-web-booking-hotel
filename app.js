@@ -27,14 +27,14 @@ app.engine("ejs", engine);
 // app.set("trust proxy", 1);
 app.use(
   session({
-    secret: "keyboard cat",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    secret: "1231qweqweqwee12",
+    name: "secretName",
     cookie: {
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      sameSite: true,
       maxAge: 24 * 60 * 60 * 1000,
     },
-    proxy: true,
   })
 );
 
