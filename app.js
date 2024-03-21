@@ -13,6 +13,8 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var dashboardRouter = require("./routes/admin");
 var apiRouter = require("./routes/api");
+var cors = require("cors");
+require("dotenv").config();
 
 var app = express();
 
@@ -23,6 +25,9 @@ dbMongoose.catch((err) => console.log("Database gagal tersambunng", err));
 //engine-local-ejs
 app.engine("ejs", engine);
 
+//cors
+app.use(cors());
+ 
 //session express
 // app.set("trust proxy", 1);
 app.use(

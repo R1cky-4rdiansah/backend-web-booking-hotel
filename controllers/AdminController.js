@@ -12,6 +12,7 @@ const { ObjectId } = mongoose.mongo;
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const { group } = require("console");
+const QRCode = require("qrcode");
 
 module.exports = {
   viewLogin: (req, res) => {
@@ -113,6 +114,21 @@ module.exports = {
           }
         });
       }
+
+      // QRCode.toDataURL(
+      //   "Ricky Ardiansah",
+      //   { errorCorrectionLevel: "H" },
+      //   function (err, url) {
+      //     res.render("admin/dashboard/admin-dashboard", {
+      //       data,
+      //       user,
+      //       member,
+      //       item,
+      //       booking,
+      //       qr_code: url,
+      //     });
+      //   }
+      // );
 
       res.render("admin/dashboard/admin-dashboard", {
         data,

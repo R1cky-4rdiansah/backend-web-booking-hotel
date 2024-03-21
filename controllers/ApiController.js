@@ -6,6 +6,8 @@ const ActivityModel = require("../models/Activity");
 const CategoryModel = require("../models/Category");
 const BookingModel = require("../models/Booking");
 const objectId = mongoose.mongo.ObjectId;
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   landingPage: async (req, res) => {
@@ -59,7 +61,7 @@ module.exports = {
         },
       ]);
 
-      const endCategory = [];
+      const finalMostPiked = [];
 
       mostPicked.forEach((val, i) => {
         const data = mostPicked[i];
@@ -72,81 +74,117 @@ module.exports = {
         };
 
         const newData = nestedOutside(data);
-        endCategory.push(newData);
+        finalMostPiked.push(newData);
       });
 
-      const category = await CategoryModel.aggregate([
-        {
-          $lookup: {
-            from: "items",
-            localField: "itemId",
-            foreignField: "_id",
-            as: "items",
-            pipeline: [
-              { $sort: { sumBooking: -1 } },
-              { $limit: 8 },
-              {
-                $project: {
-                  _id: 1,
-                  name: "$title",
-                  price: 1,
-                  country: 1,
-                  city: 1,
-                  isPopular: 1,
-                  unit: 1,
-                  sumBooking: 1,
-                  imageId: { $arrayElemAt: ["$imageId", 0] },
-                },
-              },
-              {
-                $lookup: {
-                  from: "images",
-                  localField: "imageId",
-                  foreignField: "_id",
-                  as: "image_url",
-                  pipeline: [
-                    {
-                      $project: {
-                        _id: 0,
-                        imageUrl: 1,
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            "items._id": 1,
-            "items.name": 1,
-            "items.price": 1,
-            "items.country": 1,
-            "items.city": 1,
-            "items.isPopular": 1,
-            "items.unit": 1,
-            "items.sumBooking": 1,
-            "items.image": { $arrayElemAt: ["$items.image_url", 0] },
-          },
-        },
-      ]);
+      // const category = await CategoryModel.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "items",
+      //       localField: "itemId",
+      //       foreignField: "_id",
+      //       as: "items",
+      //       pipeline: [
+      //         { $sort: { sumBooking: -1 } },
+      //         { $limit: 8 },
+      //         {
+      //           $project: {
+      //             _id: 1,
+      //             name: "$title",
+      //             price: 1,
+      //             country: 1,
+      //             city: 1,
+      //             isPopular: 1,
+      //             unit: 1,
+      //             sumBooking: 1,
+      //             imageId: 1,
+      //           },
+      //         },
+      //         {
+      //           $lookup: {
+      //             from: "images",
+      //             localField: "items.imageId",
+      //             foreignField: "_id",
+      //             as: "image_url",
+      //             pipeline: [
+      //               {
+      //                 $project: {
+      //                   _id: 0,
+      //                   imageUrl: 1,
+      //                 },
+      //               },
+      //             ],
+      //           },
+      //         },
+      //       ],
+      //     },
+      //   },
+      //   {
+      //     $project: {
+      //       _id: 1,
+      //       name: 1,
+      //       "items._id": 1,
+      //       "items.name": 1,
+      //       "items.price": 1,
+      //       "items.country": 1,
+      //       "items.city": 1,
+      //       "items.isPopular": 1,
+      //       "items.unit": 1,
+      //       "items.sumBooking": 1,
+      //       "items.image": "$items.image_url.imageUrl",
+      //     },
+      //   },
+      // ]);
 
+      var category = await CategoryModel.find({})
+        .select("_id name")
+        .populate({
+          path: "itemId",
+          select: "_id title country city price sumBooking isPopular",
+          perDocumentLimit: 8,
+          populate: {
+            path: "imageId",
+            select: "_id name",
+            perDocumentLimit: 1,
+          },
+        });
+
+      var idItemPopular = [];
       for (let i = 0; i < category.length; i++) {
-        for (let x = 0; x < category[i].items.length; x++) {
-          const item = await ItemModel.findById(category[i].items[x]._id);
-          if (x == 0 && item.sumBooking !== 0) {
-            item.isPopular = true;
-            await item.save();
-            category[i].items[x].isPopular = true;
-          } else {
-            item.isPopular = false;
-            await item.save();
+        var maxId = "";
+        for (let x = 0; x < category[i].itemId.length; x++) {
+          const item = await ItemModel.findById(category[i].itemId[x]._id);
+          item.isPopular = false;
+          await item.save();
+          var valueItem = 0;
+          if (item.sumBooking > valueItem) {
+            valueItem = item.sumBooking;
+            maxId = item._id;
           }
         }
+        if (maxId !== "") {
+          idItemPopular.push(maxId);
+        }
       }
+
+      for (let index = 0; index < idItemPopular.length; index++) {
+        await ItemModel.findByIdAndUpdate(idItemPopular[index], {
+          isPopular: true,
+        });
+      }
+
+      category = await CategoryModel.find({})
+        .select("_id name")
+        .populate({
+          path: "itemId",
+          select: "_id title country city price sumBooking isPopular",
+          perDocumentLimit: 8,
+          populate: {
+            path: "imageId",
+            select: "imageUrl",
+            perDocumentLimit: 1,
+          },
+        });
 
       const testimonial = {
         _id: "0iesdad8g43r34r34rh8edff29",
@@ -158,10 +196,12 @@ module.exports = {
         nameFamily: "Ricky Ardiansah",
         familyJobs: "Full-Stack Web & Mobile Developer",
       };
-
-      res.json({ hero, mostPicked: endCategory, category, testimonial }, 200);
+      return res.json(
+        { hero, mostPicked: finalMostPiked, category, testimonial },
+        200
+      );
     } catch (error) {
-      res.json(error.message);
+      return res.json(error.message);
     }
   },
   detailPage: async (req, res) => {
@@ -241,7 +281,7 @@ module.exports = {
 
       const testimonial = {
         _id: "0iesdad8g43r34r34rh8edff29",
-        image_url: "/assets/image/Testimonial.jpg",
+        image_url: "images/Testimonial.jpg",
         name: "Happy Family",
         rate: 4.375,
         content:
@@ -250,9 +290,9 @@ module.exports = {
         familyJobs: "Full-Stack Web & Mobile Developer",
       };
 
-      res.json({ ...data[0], bank, testimonial }, 200);
+      return res.json({ ...data[0], bank, testimonial }, 200);
     } catch (error) {
-      res.json(error.message);
+      return res.json(error.message);
     }
   },
   bookingPage: async (req, res) => {
@@ -269,6 +309,7 @@ module.exports = {
         phoneNumber,
         accountHolder,
         bankFrom,
+        userId,
       } = req.body;
 
       if (!req.file) {
@@ -331,14 +372,14 @@ module.exports = {
 
       const invoice = `HH${year}${month}${day}${randomChar}`;
 
-      const member = await MemberModel.create({
+      const member = await MemberModel.findByIdAndUpdate(userId, {
         firstName,
         lastName,
         email,
         handphone: phoneNumber,
       });
 
-      await BookingModel.create({
+      const booking = await BookingModel.create({
         bookingStartDate,
         bookingEndDate,
         invoice,
@@ -357,11 +398,81 @@ module.exports = {
         },
       });
 
-      res.json({
+      return res.json({
         message: "Pesanan berhasil",
+        data: booking,
       });
     } catch (error) {
-      res.json(error.message);
+      return res.json(error.message);
+    }
+  },
+  orderDetails: async (req, res) => {
+    const { invoice } = req.params;
+
+    const data = await BookingModel.findOne({ invoice })
+      .populate({
+        path: "itemId._id",
+        populate: {
+          path: "featureId imageId",
+        },
+      })
+      .populate({ path: "memberId" });
+
+    return res.json({ data });
+  },
+  loginApi: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      const existingUser = await MemberModel.findOne({ username });
+
+      if (!existingUser) {
+        return res.status(400).json({ message: "Akun tidak ditemukan" });
+      }
+
+      const validation = await bcrypt.compare(password, existingUser.password);
+
+      if (!validation) {
+        return res.status(400).json({ message: "Password salah" });
+      }
+
+      const token = jwt.sign(
+        { userId: existingUser._id, username: existingUser.username },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1d",
+        }
+      );
+
+      return res.json({ token, userId: existingUser._id });
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
+  },
+  registerApi: async (req, res) => {
+    try {
+      const { username, password, email } = await req.body;
+
+      const existingUser = await MemberModel.findOne({ username });
+
+      if (existingUser) {
+        return res.status(400).json({ message: "Username sudah ada" });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPass = await bcrypt.hash(password, salt);
+
+      const newUser = new MemberModel({
+        username,
+        password: hashedPass,
+        email,
+      });
+
+      await newUser.save();
+
+      return res.json({ message: "Akun berhasil dibuat" });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
   },
 };

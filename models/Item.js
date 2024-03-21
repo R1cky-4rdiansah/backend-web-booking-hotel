@@ -34,10 +34,6 @@ const itemSchema = new mongoose.Schema({
     type: String,
     default: "malam",
   },
-  unit: {
-    type: String,
-    required: true,
-  },
   sumBooking: {
     type: Number,
     default: 0,
