@@ -7,6 +7,7 @@ var Activity = require("./models/Activity");
 var Booking = require("./models/Booking");
 var Member = require("./models/Member");
 var Bank = require("./models/Bank");
+var Testimonial = require("./models/Testimonial");
 var Users = require("./models/Users");
 
 // Connect to MongoDB via Mongoose
@@ -1152,6 +1153,33 @@ var dataBank = [
   },
 ];
 
+var dataTestimonial = [
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903392"),
+    itemId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
+    image_url: "images/Fitur 2.jfif",
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    rate: 4,
+    content: "Woke punya",
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903390"),
+    itemId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
+    image_url: "images/Fitur 2.jfif",
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    rate: 4.5,
+    content: "Woke punya",
+  },
+  {
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903391"),
+    itemId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
+    image_url: "images/Fitur 2.jfif",
+    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    rate: 3.5,
+    content: "Woke punya",
+  },
+];
+
 var dataUsers = [
   {
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903345"),
@@ -1161,25 +1189,26 @@ var dataUsers = [
 ];
 
 const seeDb = async () => {
-  await Category.deleteMany({});
-  await Item.deleteMany({});
-  await Image.deleteMany({});
-  await Feature.deleteMany({});
-  await Activity.deleteMany({});
-  await Booking.deleteMany({});
-  await Member.deleteMany({});
-  await Bank.deleteMany({});
-  await Users.deleteMany({});
+  // await Category.deleteMany({});
+  // await Item.deleteMany({});
+  // await Image.deleteMany({});
+  // await Feature.deleteMany({});
+  // await Activity.deleteMany({});
+  // await Booking.deleteMany({});
+  // await Member.deleteMany({});
+  // await Bank.deleteMany({});
+  // await Users.deleteMany({});
 
-  await Category.insertMany(dataCategory);
-  await Item.insertMany(dataItem);
-  await Image.insertMany(dataImage);
-  await Feature.insertMany(dataFeature);
-  await Activity.insertMany(dataActivity);
-  await Booking.insertMany(dataBooking);
-  await Member.insertMany(dataMember);
-  await Bank.insertMany(dataBank);
-  await Users.create(dataUsers);
+  // await Category.insertMany(dataCategory);
+  // await Item.insertMany(dataItem);
+  // await Image.insertMany(dataImage);
+  // await Feature.insertMany(dataFeature);
+  // await Activity.insertMany(dataActivity);
+  // await Booking.insertMany(dataBooking);
+  // await Member.insertMany(dataMember);
+  // await Bank.insertMany(dataBank);
+  await Testimonial.create(dataTestimonial);
+  // await Users.create(dataUsers);
 };
 
 seeDb().then(() => {

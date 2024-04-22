@@ -26,8 +26,13 @@ dbMongoose.catch((err) => console.log("Database gagal tersambunng", err));
 app.engine("ejs", engine);
 
 //cors
-app.use(cors());
- 
+app.use(
+  cors({
+    origin: ["http://localhost:3001"],
+    credentials: true,
+  })
+);
+
 //session express
 // app.set("trust proxy", 1);
 app.use(

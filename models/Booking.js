@@ -37,10 +37,6 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // bankId: {
-  //   type: ObjectId,
-  //   ref: "Bank",
-  // },
   memberId: {
     type: ObjectId,
     ref: "Member",

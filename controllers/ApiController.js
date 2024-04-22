@@ -8,6 +8,7 @@ const BookingModel = require("../models/Booking");
 const objectId = mongoose.mongo.ObjectId;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const TestimonialModel = require("../models/Testimonial");
 
 module.exports = {
   landingPage: async (req, res) => {
@@ -144,7 +145,7 @@ module.exports = {
           perDocumentLimit: 8,
           populate: {
             path: "imageId",
-            select: "_id name",
+            select: "imageUrl",
             perDocumentLimit: 1,
           },
         });
@@ -189,12 +190,10 @@ module.exports = {
       const testimonial = {
         _id: "0iesdad8g43r34r34rh8edff29",
         image_url: "/images/Testimonial.jpg",
-        name: "Happy Family",
-        rate: 4.375,
+        name: "Ricky Ardiansah",
+        rate: 4.5,
         content:
           "Liburan yang sangat luar biasa dengan pemandangan yang memukau dan dan sangat natural. Kami sangat menikmati tempat disini dengan keyanaman yang sangat luar biasa.",
-        nameFamily: "Ricky Ardiansah",
-        familyJobs: "Full-Stack Web & Mobile Developer",
       };
       return res.json(
         { hero, mostPicked: finalMostPiked, category, testimonial },
@@ -420,6 +419,175 @@ module.exports = {
 
     return res.json({ data });
   },
+  findPage: async (req, res) => {
+    const { page, nama, harga, kota, search } = req.query;
+    const skip = 9 * page;
+    var filter = { isPopular: -1 };
+    if (nama !== "" && nama !== undefined) {
+      if (nama == "Ascending") {
+        filter.title = 1;
+      } else {
+        filter.title = -1;
+      }
+    }
+
+    if (harga !== "" && harga !== undefined) {
+      if (harga == "Termurah") {
+        filter.price = 1;
+      } else {
+        filter.price = -1;
+      }
+    }
+
+    var filterSearch = {};
+
+    if (search !== "" && search !== undefined) {
+      filterSearch.title = {
+        $regex: new RegExp(search, "i"),
+      };
+    }
+
+    if (kota !== "" && kota !== undefined) {
+      filterSearch.city = {
+        $regex: new RegExp(kota, "i"),
+      };
+    }
+
+    try {
+      const data = await ItemModel.find(filterSearch)
+        .select("_id title country city price sumBooking isPopular")
+        .populate({
+          path: "imageId",
+          select: "imageUrl",
+          perDocumentLimit: 1,
+        })
+        .sort(filter)
+        .skip(skip)
+        .limit(9);
+
+      const city = await ItemModel.aggregate([
+        {
+          $group: {
+            _id: "$city",
+          },
+        },
+      ]);
+
+      return res.json({ data, city });
+    } catch (error) {
+      return res.json(error.message);
+    }
+  },
+  storiePage: async (req, res) => {
+    const { userId } = req.body;
+    const data = await BookingModel.aggregate([
+      { $match: { memberId: new objectId(userId) } },
+      {
+        $lookup: {
+          from: "items",
+          localField: "itemId._id",
+          foreignField: "_id",
+          as: "item",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                title: 1,
+                country: 1,
+                city: 1,
+                imageId: { $first: "$imageId" },
+              },
+            },
+            {
+              $lookup: {
+                from: "images",
+                localField: "imageId",
+                foreignField: "_id",
+                as: "image",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 0,
+                      url: "$imageUrl",
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "testimonials",
+          localField: "itemId._id",
+          foreignField: "itemId",
+          as: "testi",
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                rate: 1,
+              },
+            },
+            {
+              $group: {
+                _id: "itemId",
+                count: { $sum: 1 },
+                average: { $avg: "$rate" },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: {
+            itemId: "$itemId._id",
+            title: { $first: "$item.title" },
+            country: { $first: "$item.country" },
+            city: { $first: "$item.city" },
+            imageId: { $first: "$item.image.url" },
+            price: "$itemId.price",
+            duration: "$itemId.duration",
+            count: { $first: "$testi.count" },
+            average: { $first: "$testi.average" },
+            memberId: "$memberId",
+          },
+          bookingStartDate: { $first: "$bookingStartDate" },
+          bookingEndDate: { $first: "$bookingEndDate" },
+        },
+      },
+      { $sort: { bookingStartDate: -1 } },
+    ]);
+
+    return res.json({ data });
+  },
+  myStorie: async (req, res) => {
+    try {
+      const { userId, itemId } = req.body;
+      const data = await TestimonialModel.findOne({ itemId, memberId: userId });
+
+      return res.json({ data });
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
+  },
+  sendRate: async (req, res) => {
+    try {
+      const { nilai, testimonial, itemId, userId } = req.body;
+      await TestimonialModel.create({
+        content: testimonial,
+        image_url: `images/${req.file.filename}`,
+        memberId: userId,
+        itemId: itemId,
+        rate: nilai,
+      });
+      return res.json({ message: "Data sudah tersimpan" });
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
+  },
   loginApi: async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -443,7 +611,12 @@ module.exports = {
           expiresIn: "1d",
         }
       );
-
+      res.cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      res.cookie("userId", existingUser._id, {
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       return res.json({ token, userId: existingUser._id });
     } catch (error) {
       return res.json({ message: error.message });
