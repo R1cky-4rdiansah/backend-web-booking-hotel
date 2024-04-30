@@ -9,6 +9,7 @@ const objectId = mongoose.mongo.ObjectId;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const TestimonialModel = require("../models/Testimonial");
+const fs = require("fs");
 
 module.exports = {
   landingPage: async (req, res) => {
@@ -575,14 +576,39 @@ module.exports = {
   },
   sendRate: async (req, res) => {
     try {
-      const { nilai, testimonial, itemId, userId } = req.body;
-      await TestimonialModel.create({
-        content: testimonial,
-        image_url: `images/${req.file.filename}`,
-        memberId: userId,
-        itemId: itemId,
-        rate: nilai,
-      });
+      const { methode, nilai, testimonial, itemId, userId, testiId } = req.body;
+      console.log(methode, nilai, testimonial, itemId, userId, testiId);
+      if (methode == "post") {
+        await TestimonialModel.create({
+          content: testimonial,
+          image_url: `images/${req.file.filename}`,
+          memberId: userId,
+          itemId: itemId,
+          rate: nilai,
+        });
+      } else if (methode == "update") {
+        if (req.file) {
+          const data = await TestimonialModel.findById(testiId);
+          //Delete Gambar
+          if (fs.existsSync("./public/" + data.image_url)) {
+            fs.unlinkSync("./public/" + data.image_url);
+          }
+          await TestimonialModel.findByIdAndUpdate(testiId, {
+            content: testimonial,
+            image_url: `images/${req.file.filename}`,
+            memberId: userId,
+            itemId: itemId,
+            rate: nilai,
+          });
+        } else {
+          await TestimonialModel.findByIdAndUpdate(testiId, {
+            content: testimonial,
+            memberId: userId,
+            itemId: itemId,
+            rate: nilai,
+          });
+        }
+      }
       return res.json({ message: "Data sudah tersimpan" });
     } catch (error) {
       return res.json({ message: error.message });
