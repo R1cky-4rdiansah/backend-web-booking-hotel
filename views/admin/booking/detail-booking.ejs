@@ -1,5 +1,5 @@
-<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Detail Booking') %> <% block('sidebar', partial('../../parts/sidebar')) %> <%
-block('navbar', partial('../../parts/navbar')) %>
+<%- layout('../../parts/layout') %> <% block('title', 'Halan Halan | Detail Booking') %> <% block('sidebar', partial('../../parts/sidebar')) %> 
+<% block('navbar', partial('../../parts/navbar')) %>
 
 <div class="container-fluid">
   <nav aria-label="breadcrumb">
@@ -38,7 +38,7 @@ block('navbar', partial('../../parts/navbar')) %>
             <table class="table table-bordered" width="100%" cellspacing="0">
               <tbody class="border">
                 <tr>
-                  <td class="font-weight-bolder" style="">Nama Member</td>
+                  <td class="font-weight-bolder">Nama Member</td>
                   <td>
                     <%= data.memberId.firstName %> <%= data.memberId.lastName %>
                   </td>

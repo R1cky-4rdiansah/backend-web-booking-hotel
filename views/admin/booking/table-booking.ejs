@@ -25,23 +25,18 @@
             <td class="text-center"><%= i+1 %></td>
             <td class="text-center">
               <p>
-                <%= new Intl.DateTimeFormat("id", { weekday: 'long', day:
-                "numeric", month: "long", year: "numeric"
-                }).format(val.bookingStartDate) %> <br />
+                <%= new Intl.DateTimeFormat("id", { weekday: 'long', day: "numeric", month: "long", year: "numeric"}).format(val.bookingStartDate) %> <br />
                 s/d <br />
-                <%= new Intl.DateTimeFormat("id", { weekday: 'long', day:
-                "numeric", month: "long", year: "numeric"
-                }).format(val.bookingEndDate) %>
+                <%= new Intl.DateTimeFormat("id", { weekday: 'long', day: "numeric", month: "long", year: "numeric"}).format(val.bookingEndDate) %>
               </p>
             </td>
             <td><%= val.invoice %></td>
             <td><%= val.itemId.title %></td>
-            <td><%= val.memberId.firstName %> <%= val.memberId.lastName %></td>
+            <td><%= val.memberId.firstName %> <%= val.memberId.lastName %> </td>
             <td class="text-center">
               <% if(val.payments.status == 'Proses') { %>
               <span class="badge badge-warning p-1"
-                ><i class="fa fa-times-circle mr-1"></i> <%= val.payments.status
-                %>
+                ><i class="fa fa-times-circle mr-1"></i> <%= val.payments.status %>
               </span>
               <% } else if(val.payments.status == 'Terima') { %>
               <span class="badge badge-success p-1"
