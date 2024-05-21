@@ -188,16 +188,44 @@ module.exports = {
           },
         });
 
-      const testimonial = {
-        _id: "0iesdad8g43r34r34rh8edff29",
-        image_url: "/images/Testimonial.jpg",
-        name: "Ricky Ardiansah",
-        rate: 4.5,
-        content:
-          "Liburan yang sangat luar biasa dengan pemandangan yang memukau dan dan sangat natural. Kami sangat menikmati tempat disini dengan keyanaman yang sangat luar biasa.",
-      };
+      const testimonial = await TestimonialModel.aggregate([
+        {
+          $lookup: {
+            from: "members",
+            localField: "memberId",
+            foreignField: "_id",
+            as: "user",
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                  name: { $concat: ["$firstName", " ", "$lastName"] },
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            image_url: 1,
+            name: { $first: "$user.name" },
+            rate: 1,
+            content: 1,
+          },
+        },
+        {
+          $match: { rate: { $gt: 4 } },
+        },
+      ]);
+
       return res.json(
-        { hero, mostPicked: finalMostPiked, category, testimonial },
+        {
+          hero,
+          mostPicked: finalMostPiked,
+          category,
+          testimonial: testimonial[0],
+        },
         200
       );
     } catch (error) {
@@ -279,18 +307,49 @@ module.exports = {
 
       const bank = await BankModel.find({}).select("");
 
-      const testimonial = {
-        _id: "0iesdad8g43r34r34rh8edff29",
-        image_url: "images/Testimonial.jpg",
-        name: "Happy Family",
-        rate: 4.375,
-        content:
-          "Liburan yang sangat luar biasa dengan pemandangan yang memukau dan dan sangat natural. Kami sangat menikmati tempat disini dengan keyanaman yang sangat luar biasa.",
-        nameFamily: "Ricky Ardiansah",
-        familyJobs: "Full-Stack Web & Mobile Developer",
-      };
+      // const testimonial = {
+      //   _id: "0iesdad8g43r34r34rh8edff29",
+      //   image_url: "images/Testimonial.jpg",
+      //   name: "Happy Family",
+      //   rate: 4.375,
+      //   content:
+      //     "Liburan yang sangat luar biasa dengan pemandangan yang memukau dan dan sangat natural. Kami sangat menikmati tempat disini dengan keyanaman yang sangat luar biasa.",
+      //   nameFamily: "Ricky Ardiansah",
+      //   familyJobs: "Full-Stack Web & Mobile Developer",
+      // };
 
-      return res.json({ ...data[0], bank, testimonial }, 200);
+      const testimonial = await TestimonialModel.aggregate([
+        {
+          $match: { itemId: new objectId(id) },
+        },
+        {
+          $lookup: {
+            from: "members",
+            localField: "memberId",
+            foreignField: "_id",
+            as: "user",
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                  name: { $concat: ["$firstName", " ", "$lastName"] },
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            image_url: 1,
+            name: { $first: "$user.name" },
+            rate: 1,
+            content: 1,
+          },
+        },
+      ]);
+
+      return res.json({ ...data[0], bank, testimonial: testimonial[0] }, 200);
     } catch (error) {
       return res.json(error.message);
     }

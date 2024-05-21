@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const memberSchema = new mongoose.Schema({
   username: {
@@ -29,11 +30,27 @@ const memberSchema = new mongoose.Schema({
   },
 });
 
-memberSchema.methods.verifyPassword = async function (password) {
-  const user = this;
-  const isMatch = await bcrypt.compare(password, user.password);
-  return isMatch;
-};
+// memberSchema.methods.verifyPassword = async function (password) {
+//   const user = this;
+//   const isMatch = await bcrypt.compare(password, user.password);
+//   return isMatch;
+// };
+
+// memberSchema.pre("save", async function (next) {
+//   const user = this;
+//   if (user.isModified("password") || user.isNew) {
+//     try {
+//       const salt = await bcrypt.genSalt(10);
+//       const hash = await bcrypt.hash(user.password, salt);
+//       user.password = hash;
+//       next();
+//     } catch (err) {
+//       return next(err);
+//     }
+//   } else {
+//     return next();
+//   }
+// });
 
 const Member = mongoose.model("Member", memberSchema);
 

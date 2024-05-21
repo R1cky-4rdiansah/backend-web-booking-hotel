@@ -1122,17 +1122,21 @@ var dataBooking = [
 var dataMember = [
   {
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
-    firstName: "Elfin",
-    lastName: "Sanjaya",
-    email: "elfinsanjaya12@gmail.com",
-    handphone: "082377954008",
+    firstName: "Ricky",
+    lastName: "Ardiansah",
+    email: "rickyardiansah@gmail.com",
+    handphone: "082377951221",
+    username: "ricky",
+    password: "123123",
   },
   {
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903334"),
-    firstName: "Yein",
-    lastName: "Narayana",
-    email: "elfinsanjaya1207@gmail.com",
+    firstName: "Maz",
+    lastName: "Gery",
+    email: "mazgery@gmail.com",
     handphone: "082377954008",
+    username: "Gery",
+    password: "123123",
   },
 ];
 
@@ -1141,29 +1145,29 @@ var dataBank = [
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903322"),
     nameBank: "Mandiri",
     noRekening: "089898",
-    name: "elfin",
+    name: "Halan-halan",
     imageUrl: "images/Logo Bank Jateng.png",
   },
   {
     _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903323"),
     nameBank: "BCA",
     noRekening: "878678",
-    name: "elfin",
+    name: "Halan-halan",
     imageUrl: "images/Logo Bank Mandiri.png",
   },
 ];
 
 var dataTestimonial = [
   {
-    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903392"),
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc901192"),
     itemId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
-    image_url: "images/Fitur 2.jfif",
+    image_url: "images/Family 2.jfif",
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
     rate: 4,
     content: "Woke punya",
   },
   {
-    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903390"),
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc901188"),
     itemId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
     image_url: "images/Fitur 2.jfif",
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
@@ -1171,9 +1175,9 @@ var dataTestimonial = [
     content: "Woke punya",
   },
   {
-    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903391"),
+    _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902200"),
     itemId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc902222"),
-    image_url: "images/Fitur 2.jfif",
+    image_url: "images/Rumah 2.jfif",
     memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
     rate: 3.5,
     content: "Woke punya",
@@ -1189,26 +1193,27 @@ var dataUsers = [
 ];
 
 const seeDb = async () => {
-  // await Category.deleteMany({});
-  // await Item.deleteMany({});
-  // await Image.deleteMany({});
-  // await Feature.deleteMany({});
-  // await Activity.deleteMany({});
-  // await Booking.deleteMany({});
-  // await Member.deleteMany({});
-  // await Bank.deleteMany({});
-  // await Users.deleteMany({});
+  await Category.deleteMany({});
+  await Item.deleteMany({});
+  await Image.deleteMany({});
+  await Feature.deleteMany({});
+  await Activity.deleteMany({});
+  await Booking.deleteMany({});
+  await Member.deleteMany({});
+  await Bank.deleteMany({});
+  await Users.deleteMany({});
+  await Testimonial.deleteMany({});
 
-  // await Category.insertMany(dataCategory);
-  // await Item.insertMany(dataItem);
-  // await Image.insertMany(dataImage);
-  // await Feature.insertMany(dataFeature);
-  // await Activity.insertMany(dataActivity);
-  // await Booking.insertMany(dataBooking);
-  // await Member.insertMany(dataMember);
-  // await Bank.insertMany(dataBank);
-  await Testimonial.create(dataTestimonial);
-  // await Users.create(dataUsers);
+  await Category.insertMany(dataCategory);
+  await Item.insertMany(dataItem);
+  await Image.insertMany(dataImage);
+  await Feature.insertMany(dataFeature);
+  await Activity.insertMany(dataActivity);
+  await Booking.insertMany(dataBooking);
+  await Member.create(dataMember);
+  await Bank.insertMany(dataBank);
+  await Testimonial.insertMany(dataTestimonial);
+  await Users.create(dataUsers);
 };
 
 seeDb().then(() => {
