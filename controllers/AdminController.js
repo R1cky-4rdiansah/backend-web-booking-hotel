@@ -11,8 +11,6 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.mongo;
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
-const { group } = require("console");
-const QRCode = require("qrcode");
 
 module.exports = {
   viewLogin: (req, res) => {
