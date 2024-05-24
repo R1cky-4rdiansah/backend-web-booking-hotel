@@ -11,11 +11,13 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.mongo;
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { jwtDecode } = require("jwt-decode");
 
 module.exports = {
   viewLogin: (req, res) => {
     try {
-      if (req.session.user == null || req.session.user == undefined) {
+      if (req.cookies.token == null) {
         res.render("index", {
           status: req.flash("status"),
           message: req.flash("info"),
@@ -43,10 +45,25 @@ module.exports = {
         res.redirect("/admin/login");
       }
 
-      req.session.user = {
-        userId: user._id,
-        username,
-      };
+      // req.session.user = {
+      //   userId: user._id,
+      //   username,
+      // };
+
+      const token = jwt.sign(
+        {
+          userId: user._id,
+          username,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1d",
+        }
+      );
+
+      res.cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+      });
 
       res.redirect("/admin/dashboard");
     } catch (error) {
@@ -54,12 +71,16 @@ module.exports = {
     }
   },
   logoutAction: async (req, res) => {
-    req.session.destroy();
+    // req.session.destroy();
+    res.cookie("token", null, {
+      maxAge: 1,
+    });
     res.json({ message: "Logout" }, 200);
   },
   viewAdminDashboard: async (req, res) => {
     try {
-      const user = req.session.user.username;
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       const member = await MemberModel.find({}).count();
       const item = await ItemModel.find({}).count();
@@ -142,7 +163,8 @@ module.exports = {
   viewAdminCategory: async (req, res) => {
     try {
       const data = await CategoryModel.find({});
-      const user = req.session.user.username;
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/category/admin-category", {
         data,
@@ -202,12 +224,14 @@ module.exports = {
   viewAdminBank: async (req, res) => {
     try {
       const data = await BankModel.find({});
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/bank/admin-bank", {
         data,
         message: req.flash("info"),
         status: req.flash("status"),
-        user: req.session.user.username,
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -304,13 +328,15 @@ module.exports = {
         });
 
       const category = await CategoryModel.find({});
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/item/admin-item", {
         data,
         category,
         message: req.flash("info"),
         status: req.flash("status"),
-        user: req.session.user.username,
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -483,13 +509,15 @@ module.exports = {
     try {
       const { id } = req.params;
       const data = await FeatureModel.find({ itemId: id });
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/item/feature/admin-feature", {
         data,
         id,
         message: req.flash("info"),
         status: req.flash("status"),
-        user: req.session.user.username,
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -589,13 +617,15 @@ module.exports = {
     try {
       const { id } = req.params;
       const data = await ActivityModel.find({ itemId: id });
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/item/activity/admin-activity", {
         data,
         id,
         message: req.flash("info"),
         status: req.flash("status"),
-        user: req.session.user.username,
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -693,10 +723,12 @@ module.exports = {
       const data = await BookingModel.find({})
         .populate("memberId")
         .sort({ _id: -1 });
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/booking/admin-booking", {
         data,
-        user: req.session.user.username,
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
@@ -706,12 +738,14 @@ module.exports = {
     const { id } = req.params;
     try {
       const data = await BookingModel.findById(id).populate("memberId");
+      const token = jwtDecode(req.cookies.token);
+      const user = token.username;
 
       res.render("admin/booking/detail-booking", {
         message: req.flash("info"),
         status: req.flash("status"),
         data,
-        user: req.session.user.username,
+        user,
       });
     } catch (error) {
       res.render("error/errorPage", { message: error.message });
