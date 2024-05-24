@@ -17,7 +17,7 @@ const { jwtDecode } = require("jwt-decode");
 module.exports = {
   viewLogin: (req, res) => {
     try {
-      if (req.cookies.token == null) {
+      if (typeof req.cookies.token == "undefined") {
         res.render("index", {
           status: req.flash("status"),
           message: req.flash("info"),

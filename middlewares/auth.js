@@ -12,19 +12,19 @@ const auth = async (req, res, next) => {
 
   const token = req.cookies.token;
 
-  if (!token) {
+  if (typeof token == "undefined") {
     res.redirect("/admin/login");
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
+      if (err) {
+        req.flash("status", "danger");
+        req.flash("info", "Maaf, Token telah habis login ulang ya...");
+        res.redirect("/admin/login");
+      }
+      console.log(decode);
+      next();
+    });
   }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
-    if (err) {
-      req.flash("status", "danger");
-      req.flash("info", "Maaf, Token telah habis login ulang ya...");
-      res.redirect("/admin/login");
-    }
-    console.log(decode);
-    next();
-  });
 };
 
 module.exports = auth;
