@@ -28,8 +28,8 @@ app.engine("ejs", engine);
 //cors
 app.use(
   cors({
-    // origin: ["http://localhost:3001"],
-    origin: ["https://backend-web-booking-hotel.vercel.app"],
+    origin: ["http://localhost:3001"],
+    // origin: ["https://backend-web-booking-hotel.vercel.app"],
     credentials: true,
   })
 );
