@@ -43,7 +43,6 @@ app.use(
     secret: "1231qweqweqwee12",
     name: "secretName",
     cookie: {
-      sameSite: true,
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
