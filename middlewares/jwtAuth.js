@@ -12,8 +12,9 @@ const JWTAuth = (req, res, next) => {
   const token = headers.split(" ")[1];
 
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
       if (err) return res.status(401).json({ message: "Token tidak valid" });
+      req.user = decode;
       next();
     });
   }

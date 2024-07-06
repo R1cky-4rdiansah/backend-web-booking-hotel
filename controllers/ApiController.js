@@ -368,8 +368,8 @@ module.exports = {
         phoneNumber,
         accountHolder,
         bankFrom,
-        userId,
       } = req.body;
+      const { userId } = req.user;
 
       if (!req.file) {
         return res.status(404).json({ message: "Gambar tidak ditemukan" });
@@ -539,7 +539,7 @@ module.exports = {
     }
   },
   storiePage: async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.user;
     const data = await BookingModel.aggregate([
       { $match: { memberId: new objectId(userId) } },
       {
@@ -625,7 +625,8 @@ module.exports = {
   },
   myStorie: async (req, res) => {
     try {
-      const { userId, itemId } = req.body;
+      const { itemId } = req.body;
+      const { userId } = req.user;
       const data = await TestimonialModel.findOne({ itemId, memberId: userId });
 
       return res.json({ data });
@@ -635,8 +636,8 @@ module.exports = {
   },
   sendRate: async (req, res) => {
     try {
-      const { methode, nilai, testimonial, itemId, userId, testiId } = req.body;
-      console.log(methode, nilai, testimonial, itemId, userId, testiId);
+      const { methode, nilai, testimonial, itemId, testiId } = req.body;
+      const { userId } = req.user;
       if (methode == "post") {
         await TestimonialModel.create({
           content: testimonial,
@@ -699,10 +700,7 @@ module.exports = {
       res.cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.cookie("userId", existingUser._id, {
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-      return res.json({ token, userId: existingUser._id });
+      return res.json({ token });
     } catch (error) {
       return res.json({ message: error.message });
     }
