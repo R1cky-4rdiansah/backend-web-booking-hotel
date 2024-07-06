@@ -12,10 +12,10 @@ const {
   storiePage,
   sendRate,
   myStorie,
+  myProfile,
 } = require("../controllers/ApiController");
-const { upload, none } = require("../middlewares/multer");
+const { upload } = require("../middlewares/multer");
 const JWTAuth = require("../middlewares/jwtAuth");
-const multer = require("multer");
 
 router.get("/landing-page", landingPage);
 router.get("/detail-hotel/:id", JWTAuth, detailPage);
@@ -27,5 +27,6 @@ router.post("/my-storie", JWTAuth, myStorie);
 router.post("/post-rating", JWTAuth, upload, sendRate);
 router.post("/login", loginApi);
 router.post("/register", registerApi);
+router.post("/my-profile", JWTAuth, myProfile);
 
 module.exports = router;

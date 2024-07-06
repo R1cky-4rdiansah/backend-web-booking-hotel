@@ -674,6 +674,13 @@ module.exports = {
       return res.json({ message: error.message });
     }
   },
+  myProfile: async (req, res) => {
+    const { userId } = req.user;
+
+    const data = await MemberModel.findById(userId);
+
+    return res.status(200).json({ data });
+  },
   loginApi: async (req, res) => {
     try {
       const { username, password } = req.body;
