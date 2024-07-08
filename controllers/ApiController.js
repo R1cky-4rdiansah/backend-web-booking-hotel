@@ -738,4 +738,36 @@ module.exports = {
       return res.status(500).json({ message: error.message });
     }
   },
+  updateUser: async (req, res) => {
+    try {
+      const { name, email, phone } = req.body;
+      const { userId } = req.user;
+
+      const arrayName = name.split(" ");
+      const firstName = arrayName[0];
+
+      let lastName;
+      if (arrayName.length > 2) {
+        const newArrayName = arrayName.splice(1, arrayName.length);
+        lastName = newArrayName.join(" ");
+      } else if (arrayName.length == 2) {
+        lastName = arrayName[1];
+      } else {
+        lastName = "";
+      }
+
+      const updateUser = await MemberModel.findByIdAndUpdate(userId, {
+        firstName,
+        lastName,
+        email,
+        handphone: phone,
+      });
+
+      return res.status(200).json({
+        data: updateUser,
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
 };

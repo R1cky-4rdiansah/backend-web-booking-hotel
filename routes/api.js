@@ -13,6 +13,7 @@ const {
   sendRate,
   myStorie,
   myProfile,
+  updateUser,
 } = require("../controllers/ApiController");
 const { upload } = require("../middlewares/multer");
 const JWTAuth = require("../middlewares/jwtAuth");
@@ -28,5 +29,6 @@ router.post("/post-rating", JWTAuth, upload, sendRate);
 router.post("/login", loginApi);
 router.post("/register", registerApi);
 router.post("/my-profile", JWTAuth, myProfile);
+router.post("/update-profile", JWTAuth, updateUser);
 
 module.exports = router;
