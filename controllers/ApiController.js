@@ -431,12 +431,7 @@ module.exports = {
 
       const invoice = `HH${year}${month}${day}${randomChar}`;
 
-      const member = await MemberModel.findByIdAndUpdate(userId, {
-        firstName,
-        lastName,
-        email,
-        handphone: phoneNumber,
-      });
+      const member = await MemberModel.findById(userId);
 
       const booking = await BookingModel.create({
         bookingStartDate,
