@@ -949,7 +949,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 240000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -969,7 +973,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 240000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 1",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -989,7 +997,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 400000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 2",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -1009,7 +1021,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 400000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 3",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BCA",
@@ -1029,7 +1045,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 400000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 4",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "Mandiri",
@@ -1049,7 +1069,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 400000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 5",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BNI",
@@ -1069,7 +1093,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 400000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 6",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BNI",
@@ -1089,7 +1117,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 240000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 7",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "BNI",
@@ -1109,7 +1141,11 @@ var dataBooking = [
       duration: 2,
     },
     total: 400000,
-    memberId: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+    memberId: {
+      _id: new mongoose.mongo.ObjectId("5e96cbe292b97300fc903333"),
+      firstName: "Maz",
+      lastName: "Gery 8",
+    },
     payments: {
       proofPayment: "images/bukti-bayar.jpg",
       bankFrom: "Jateng",
