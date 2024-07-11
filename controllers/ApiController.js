@@ -444,7 +444,11 @@ module.exports = {
           duration,
         },
         total,
-        memberId: member._id,
+        memberId: {
+          _id: member._id,
+          firstName,
+          lastName,
+        },
         payments: {
           proofPayment: `images/${req.file.filename}`,
           bankFrom,
@@ -536,7 +540,11 @@ module.exports = {
   storiePage: async (req, res) => {
     const { userId } = req.user;
     const data = await BookingModel.aggregate([
-      { $match: { memberId: new objectId(userId) } },
+      {
+        $match: {
+          "memberId._id": new objectId(userId),
+        },
+      },
       {
         $lookup: {
           from: "items",
@@ -607,7 +615,7 @@ module.exports = {
             duration: "$itemId.duration",
             count: { $first: "$testi.count" },
             average: { $first: "$testi.average" },
-            memberId: "$memberId",
+            memberId: "$memberId._id",
           },
           bookingStartDate: { $first: "$bookingStartDate" },
           bookingEndDate: { $first: "$bookingEndDate" },

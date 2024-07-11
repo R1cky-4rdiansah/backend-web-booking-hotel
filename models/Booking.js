@@ -38,8 +38,19 @@ const bookingSchema = new mongoose.Schema({
     required: true,
   },
   memberId: {
-    type: ObjectId,
-    ref: "Member",
+    _id: {
+      type: ObjectId,
+      ref: "Member",
+      required: true,
+    },
+    firstName: {
+      type: String,
+      required: [true, "Mohon isi nama depan"],
+    },
+    lastName: {
+      type: String,
+      required: [true, "Mohon isi nama belakang"],
+    },
   },
   payments: {
     proofPayment: {
@@ -56,7 +67,7 @@ const bookingSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      default: 'Proses'
+      default: "Proses",
     },
   },
 });

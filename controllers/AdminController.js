@@ -720,9 +720,7 @@ module.exports = {
   },
   viewAdminBooking: async (req, res) => {
     try {
-      const data = await BookingModel.find({})
-        .populate("memberId")
-        .sort({ _id: -1 });
+      const data = await BookingModel.find({}).sort({ _id: -1 });
       const token = jwtDecode(req.cookies.token);
       const user = token.username;
 
@@ -737,14 +735,34 @@ module.exports = {
   showBooking: async (req, res) => {
     const { id } = req.params;
     try {
-      const data = await BookingModel.findById(id).populate("memberId");
+      const data = await BookingModel.aggregate([
+        {
+          $match: { _id: new ObjectId(id) },
+        },
+        {
+          $lookup: {
+            from: "members",
+            localField: "memberId._id",
+            foreignField: "_id",
+            as: "user",
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                  name: { $concat: ["$firstName", " ", "$lastName"] },
+                },
+              },
+            ],
+          },
+        },
+      ]);
       const token = jwtDecode(req.cookies.token);
       const user = token.username;
 
       res.render("admin/booking/detail-booking", {
         message: req.flash("info"),
         status: req.flash("status"),
-        data,
+        data: data[0],
         user,
       });
     } catch (error) {
