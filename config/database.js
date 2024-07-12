@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-const db = mongoose.connect(
-  "mongodb+srv://superhalanhalan:9BxjrLWEuuB6E27O@cluster0.9q5jrp5.mongodb.net/server-halan-halan?retryWrites=true&w=majority"
-);
+const db = mongoose.connect(process.env.MONGODB_ACCESS);
 
 module.exports = db;
